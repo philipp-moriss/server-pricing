@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { SpendingController } from './spending.controller';
 
-@Module({})
+@Module({
+  controllers: [SpendingController],
+})
 export class SpendingModule {}
