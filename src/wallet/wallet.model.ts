@@ -3,7 +3,7 @@ import { SpendingModel } from '../spending/spending.model';
 export class WalletModel {
   icon: string;
   name: string;
-  balance: string;
+  balance: number;
   currency: string;
   totalSpends: number;
   myCategories: Array<ICategory>;

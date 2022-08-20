@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { LoginDto, RegisterDto } from '../dto/auth.dto';
 import { Response } from 'express';
+import { readDB } from '../mockBd/readDB';
 
 @Controller('auth')
 export class AuthController {
