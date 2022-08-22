@@ -1,6 +1,7 @@
 import { SpendingModel } from '../spending/spending.model';
 
 export class WalletModel {
+  _id: string;
   icon: string;
   name: string;
   balance: number;
