@@ -1,87 +1,146 @@
-{
-  "icon": "https://www.flaticon.com/free-icon/wallet_218390",
-  "name": "string",
-  "balance": "10000000",
-  "currency": "400",
-  "totalSpends": 0,
-  "myCategories": [
-    {
-      "_id": "1",
-      "value": "Food Store"
-    },
-    {
-      "_id": "2",
-      "value": "Clothing Shop"
-    },
-    {
-      "_id": "3",
-      "value": "Communal services"
-    },
-    {
-      "_id": "4",
-      "value": "Entertainment"
-    },
-    {
-      "_id": "5",
-      "value": "Auto services"
-    },
-    {
-      "_id": "6",
-      "value": "Gifts"
-    },
-    {
-      "_id": "7",
-      "value": "Cigarettes and alcohol"
-    }
-  ],
-  "history": [
-    {
-      "_id": "1",
-      "description": "description",
-      "category": "Gifts",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 12,
-      "title": "pan"
-    },
-    {
-      "_id": "2",
-      "description": "description",
-      "category": "Food Store",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 6,
-      "title": "hamburger"
-    },
-    {
-      "_id": "3",
-      "description": "description",
-      "category": "Clothing Shop",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 666,
-      "title": "T-shirt"
-    },
-    {
-      "_id": "4",
-      "description": "description",
-      "category": "Communal services",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 45,
-      "title": "water"
-    },
-    {
-      "_id": "5",
-      "description": "description",
-      "category": "Gifts",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 12,
-      "title": "pan"
-    },
-    {
-      "_id": "5",
-      "description": "description",
-      "category": "Entertainment",
-      "date": "2022-08-20T05:59:41.978Z",
-      "amount": 12,
-      "title": "lalala"
-    }
-  ]
-}
+[
+  {
+    "_id": "1",
+    "icon": "https://www.flaticon.com/free-icon/wallet_218390",
+    "name": "wallet first",
+    "balance": "10000000",
+    "currency": "bn",
+    "totalSpends": 0,
+    "myCategories": [
+      {
+        "_id": "1",
+        "value": "Food Store"
+      },
+      {
+        "_id": "2",
+        "value": "Clothing Shop"
+      },
+      {
+        "_id": "3",
+        "value": "Communal services"
+      },
+      {
+        "_id": "4",
+        "value": "Entertainment"
+      },
+      {
+        "_id": "5",
+        "value": "Auto services"
+      },
+      {
+        "_id": "6",
+        "value": "Gifts"
+      },
+      {
+        "_id": "7",
+        "value": "Cigarettes and alcohol"
+      }
+    ],
+    "history": [
+      {
+        "_id": "1",
+        "description": "description",
+        "category": "Gifts",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 12,
+        "title": "pan"
+      },
+      {
+        "_id": "2",
+        "description": "description",
+        "category": "Food Store",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 6,
+        "title": "hamburger"
+      },
+      {
+        "_id": "3",
+        "description": "description",
+        "category": "Clothing Shop",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 666,
+        "title": "T-shirt"
+      },
+      {
+        "_id": "4",
+        "description": "description",
+        "category": "Communal services",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 45,
+        "title": "water"
+      },
+      {
+        "_id": "5",
+        "description": "description",
+        "category": "Gifts",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 12,
+        "title": "pan"
+      },
+      {
+        "_id": "6",
+        "description": "description",
+        "category": "Entertainment",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 12,
+        "title": "lalala"
+      }
+    ]
+  },
+  {
+    "_id" : "2",
+    "icon": "https://png.pngtree.com/png-vector/20190301/ourlarge/pngtree-vector-wallet-icon-png-image_747085.jpg",
+    "name": "wallet two",
+    "balance": "999999999",
+    "currency": "usd",
+    "totalSpends": 0,
+    "myCategories": [
+      {
+        "_id": "1",
+        "value": "Food Store"
+      },
+      {
+        "_id": "2",
+        "value": "Clothing Shop"
+      },
+      {
+        "_id": "3",
+        "value": "Communal services"
+      },
+      {
+        "_id": "4",
+        "value": "Entertainment"
+      },
+      {
+        "_id": "5",
+        "value": "Auto services"
+      },
+      {
+        "_id": "6",
+        "value": "Gifts"
+      },
+      {
+        "_id": "7",
+        "value": "Cigarettes and alcohol"
+      }
+    ],
+    "history": [
+      {
+        "_id": "1",
+        "description": "description",
+        "category": "Gifts",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 12,
+        "title": "pan"
+      },
+      {
+        "_id": "2",
+        "description": "description",
+        "category": "Food Store",
+        "date": "2022-08-20T05:59:41.978Z",
+        "amount": 6,
+        "title": "hamburger"
+      }
+    ]
+  }
+]
