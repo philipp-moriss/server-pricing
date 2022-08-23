@@ -5,6 +5,7 @@ export class UserModel {
   avatarImg: string;
   permission: string;
   active: boolean;
+  walletsId: Array<string>;
   email: string;
   passwordHash: string;
   createDate: string;
