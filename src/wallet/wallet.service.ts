@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { readDB } from '../mockBd/readDB';
 import { WalletModel } from './wallet.model';
 import { SpendingModel } from '../spending/spending.model';
