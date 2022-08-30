@@ -5,10 +5,8 @@ import {
   HttpCode,
   HttpException,
   Post,
-  Res,
 } from '@nestjs/common';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { Response } from 'express';
+import { RequestUserDto } from './dto/request-auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -16,21 +14,23 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async registration(@Body() dto: RegisterDto, @Res() res: Response) {
-    const isRegister = this.authService.registration(dto.email, dto.password);
-    if (!isRegister) {
+  async registration(@Body() dto: RequestUserDto) {
+    const newUser = await this.authService.register(dto);
+    if (!newUser) {
       throw new BadRequestException('register');
     }
-    return true;
+    return newUser;
   }
 
-  @HttpCode(200)
   @Post('login')
-  async login(@Body() dto: LoginDto, @Res() res: Response) {
-    const isLogin = this.authService.login(dto.email, dto.password);
-    if (!isLogin) {
-      throw new HttpException('Login', 401);
+  async login(@Body() dto: RequestUserDto) {
+    if (!dto.email || !dto.password) {
+      throw new HttpException('Login data was not provided', 401);
     }
-    return true;
+    const user = await this.authService.login(dto);
+    if (!user) {
+      throw new HttpException('Wrong email or password', 401);
+    }
+    return user;
   }
 }
