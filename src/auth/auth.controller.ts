@@ -22,6 +22,7 @@ export class AuthController {
     return newUser;
   }
 
+  @HttpCode(200)
   @Post('login')
   async login(@Body() dto: RequestUserDto) {
     if (!dto.email || !dto.password) {

@@ -11,12 +11,15 @@ import { getMongoConfig } from './configs/mongo.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: getMongoConfig,
-    }),
+    MongooseModule.forRoot(
+      'mongodb+srv://ponyweb_uniq:vZ1e86NER0ELZpK1@ponyweb.rhexlsx.mongodb.net/?retryWrites=true&w=majority',
+    ),
+    // ConfigModule.forRoot(),
+    // MongooseModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: getMongoConfig,
+    // }),
     WalletModule,
     AuthModule,
     SpendingModule,

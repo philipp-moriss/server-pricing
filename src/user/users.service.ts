@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserModelType } from './user';
+import { UserModel, UserModelType } from './user.model';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
 import { CreateAuthDto } from '../auth/dto/create-auth.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserModelType>,
+    @InjectModel(UserModel.name) private userModel: Model<UserModelType>,
   ) {}
 
-  async createUser({ passwordHash, email }: CreateAuthDto): Promise<User> {
-    const hashPassword = await this.hashPassword(passwordHash);
-    const newUser = new this.userModel({ email, passwordHash: hashPassword });
+  async createUser({ password, email }: CreateAuthDto): Promise<UserModel> {
+    const passwordHash = await this.hashPassword(password);
+    console.log(passwordHash);
+    const newUser = new this.userModel({ email, passwordHash });
+    console.log(newUser);
     return newUser.save();
   }
 
@@ -22,12 +24,12 @@ export class UsersService {
     return hashPassword;
   }
 
-  async getUser(email: string): Promise<User | null> {
+  async getUser(email: string): Promise<UserModel | null> {
     const user = await this.userModel.findOne({ email });
-    return user || null;
+    return user;
   }
 
-  async getUserById(_id: string): Promise<User | null> {
+  async getUserById(_id: string): Promise<UserModel | null> {
     const user = await this.userModel.findById(_id);
     return user || null;
   }

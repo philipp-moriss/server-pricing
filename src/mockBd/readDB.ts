@@ -1,7 +1,7 @@
 import { readFile } from 'fs';
 import { join } from 'path';
 import { WalletModel } from '../wallet/wallet.model';
-import { User } from '../user/user';
+import { UserModel } from '../user/user.model';
 
 export async function readDB(whatRead: 'wallet' | 'user') {
   let path: string;

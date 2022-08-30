@@ -1,0 +1,43 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Exclude } from 'class-transformer';
+import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export type UserModelType = UserModel & Document;
+
+@Schema({ timestamps: true, validateBeforeSave: true })
+export class UserModel extends Document {
+  @Prop({ nullable: true })
+  firstName: string;
+
+  @Prop({ nullable: true })
+  lastName: string;
+
+  @Prop({ nullable: true })
+  avatarImg: string;
+
+  @Prop({ nullable: true })
+  permission: string;
+
+  @Prop({ nullable: true })
+  active: boolean;
+
+  @Prop({ type: () => [String], nullable: true })
+  walletsId: Array<string>;
+
+  @IsNotEmpty()
+  @IsEmail()
+  @Prop({
+    unique: true,
+    lowercase: true,
+    required: true,
+    trim: true,
+  })
+  email: string;
+
+  @Prop({ maxlength: 120 })
+  passwordHash: string;
+}
+
+export const UserModelSchema = SchemaFactory.createForClass(UserModel);

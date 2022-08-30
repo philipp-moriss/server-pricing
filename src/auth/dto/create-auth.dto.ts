@@ -1,5 +1,5 @@
 export class CreateAuthDto {
   readonly email: string;
 
-  readonly passwordHash: string;
+  readonly password: string;
 }
