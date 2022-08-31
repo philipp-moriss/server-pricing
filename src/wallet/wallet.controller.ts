@@ -19,7 +19,7 @@ export class WalletController {
   async addWallet(@Body() dto : addWalletDto) : Promise<WalletModel> {
     const wallet: WalletModel = {
       ...dto,
-      _id :
+      myCategories: [{_id: '111', value: '12341234'}]
     }
     this.walletService.addWallet(dto.userId, )
   }
