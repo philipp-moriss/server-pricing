@@ -1,3 +1,5 @@
+
+
 export class SpendingModel {
   _id: string;
   title: string;

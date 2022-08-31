@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserModel, UserModelType } from './user.model';
-import { Model } from 'mongoose';
+import {Model, Types} from 'mongoose';
 import { CreateAuthDto } from '../auth/dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -29,7 +29,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserById(_id: string): Promise<UserModel | null> {
+  async getUserById(_id: Types.ObjectId): Promise<UserModel | null> {
     const user = await this.userModel.findById(_id);
     return user || null;
   }

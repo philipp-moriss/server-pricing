@@ -1,7 +1,17 @@
 import { SpendingModel } from '../spending/spending.model';
 import { Document } from 'mongoose';
-import {Prop, Schema} from '@nestjs/mongoose';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 // export type WalletModelType = WalletModel & Document
+
+
+export class ICategory {
+  _id: string;
+  @Prop({
+    lowercase: true,
+    trim: true,
+  })
+  value: string;
+}
 
 
 @Schema({ timestamps: true, validateBeforeSave: true })
@@ -11,26 +21,35 @@ export class WalletModel extends Document{
   @Prop()
   icon: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
   name: string;
 
   @Prop()
   balance: number;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
   currency: string;
 
-  @Prop()
+  @Prop({ nullable: true })
   totalSpends: number;
 
-  @Prop()
+  @Prop({
+    type: () => [ICategory],
+    nullable: true
+  })
   myCategories: Array<ICategory>;
 
-  @Prop({nullable: true})
+  @Prop({
+    type: () => [SpendingModel],
+    nullable: true
+  })
   history: Array<SpendingModel> | null;
 }
 
-export interface ICategory {
-  _id: string;
-  value: string;
-}
+
+
+export const WalletModelSchema = SchemaFactory.createForClass(WalletModel)

@@ -1,52 +1,45 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { WalletService } from './wallet.service';
-import { SpendingModel } from '../spending/spending.model';
-import { WalletModel } from './wallet.model';
+import {Body, Controller, Get, HttpException, Post, Query,} from '@nestjs/common';
+import {WalletService} from './wallet.service';
+import {SpendingModel} from '../spending/spending.model';
+import {WalletModel} from './wallet.model';
 import {addWalletDto, getSpendingDto} from './dto/wallet.dto';
 
 @Controller('wallet')
 export class WalletController {
-  constructor(private walletService: WalletService) {}
-
-  @Post()
-  async addWallet(@Body() dto : addWalletDto) : Promise<WalletModel> {
-    const wallet: WalletModel = {
-      ...dto,
-      myCategories: [{_id: '111', value: '12341234'}]
+    constructor(private walletService: WalletService) {
     }
-    this.walletService.addWallet(dto.userId, )
-  }
 
-  @Get()
-  async getWallet(@Query('walletId') walletId: string): Promise<WalletModel> {
-    const wallet = await this.walletService.getWallet(walletId);
-    if (!walletId) {
-      throw new HttpException('wallet not found', 400);
+    @Post()
+    async addWallet(@Body() dto: addWalletDto): Promise<void> {
+
+        const {userId, ...wallet} = dto
+
+       await this.walletService.addWallet(userId, wallet)
     }
-    return wallet;
-  }
 
-  @Get('history')
-  async getHistory(
-    @Query('walletId') walletId: string,
-  ): Promise<Array<SpendingModel>> {
-    const history = await this.walletService.getAllHistoryWallet(walletId);
-    return history;
-  }
+    @Get()
+    async getWallet(@Query('walletId') walletId: string): Promise<WalletModel> {
+        const wallet = await this.walletService.getWallet(walletId);
+        if (!walletId) {
+            throw new HttpException('wallet not found', 400);
+        }
+        return wallet;
+    }
 
-  @Post('spending')
-  async getSpending(@Body() dto: getSpendingDto): Promise<SpendingModel> {
-    const spending = await this.walletService.getSpendingById(
-      dto.walletId,
-      dto.spendingId,
-    );
-    return spending;
-  }
+    @Get('history')
+    async getHistory(
+        @Query('walletId') walletId: string,
+    ): Promise<Array<SpendingModel>> {
+        const history = await this.walletService.getAllHistoryWallet(walletId);
+        return history;
+    }
+
+    @Post('spending')
+    async getSpending(@Body() dto: getSpendingDto): Promise<SpendingModel> {
+        const spending = await this.walletService.getSpendingById(
+            dto.walletId,
+            dto.spendingId,
+        );
+        return spending;
+    }
 }

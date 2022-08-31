@@ -1,6 +1,7 @@
 import { Controller, Get, Param, ParamData } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserModel } from './user.model';
+import {Types} from "mongoose";
 
 @Controller('users')
 export class UserController {
@@ -8,6 +9,7 @@ export class UserController {
 
   @Get('/user/:id')
   getUserById(@Param('id') id: string): Promise<UserModel | null> {
-    return this.usersService.getUserById(id);
+    const userObjectId = new Types.ObjectId(id)
+    return this.usersService.getUserById(userObjectId);
   }
 }
