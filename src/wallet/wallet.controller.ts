@@ -9,11 +9,20 @@ import {
 import { WalletService } from './wallet.service';
 import { SpendingModel } from '../spending/spending.model';
 import { WalletModel } from './wallet.model';
-import { getSpendingDto } from './dto/wallet.dto';
+import {addWalletDto, getSpendingDto} from './dto/wallet.dto';
 
 @Controller('wallet')
 export class WalletController {
   constructor(private walletService: WalletService) {}
+
+  @Post()
+  async addWallet(@Body() dto : addWalletDto) : Promise<WalletModel> {
+    const wallet: WalletModel = {
+      ...dto,
+      _id :
+    }
+    this.walletService.addWallet(dto.userId, )
+  }
 
   @Get()
   async getWallet(@Query('walletId') walletId: string): Promise<WalletModel> {

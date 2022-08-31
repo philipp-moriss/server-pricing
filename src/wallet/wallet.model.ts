@@ -8,7 +8,7 @@ export class WalletModel {
   currency: string;
   totalSpends: number;
   myCategories: Array<ICategory>;
-  history: Array<SpendingModel>;
+  history: Array<SpendingModel> | null;
 }
 
 export interface ICategory {
