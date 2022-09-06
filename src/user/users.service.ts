@@ -13,9 +13,7 @@ export class UsersService {
 
   async createUser({ password, email }: CreateAuthDto): Promise<UserModel> {
     const passwordHash = await this.hashPassword(password);
-    console.log(passwordHash);
     const newUser = new this.userModel({ email, passwordHash });
-    console.log(newUser);
     return newUser.save();
   }
 
@@ -29,7 +27,12 @@ export class UsersService {
     return user;
   }
 
-  async getUserById(_id: Types.ObjectId): Promise<UserModel | null> {
+  async updateUserById (_id : string, newUserData : UserModel) : Promise<UserModel | null> {
+    const updateUser = await this.userModel.findByIdAndUpdate(_id, newUserData, {overwrite : true})
+    return updateUser
+  }
+
+  async getUserById(_id: string): Promise<UserModel | null> {
     const user = await this.userModel.findById(_id);
     return user || null;
   }

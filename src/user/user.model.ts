@@ -17,13 +17,13 @@ export class UserModel extends Document {
   @Prop({ nullable: true })
   avatarImg: string;
 
-  @Prop({ nullable: true })
+  @Prop({ nullable: true, default: 'user'})
   permission: string;
 
   @Prop({ nullable: true })
   active: boolean;
 
-  @Prop({ type: () => [String], nullable: true })
+  @Prop({ type: () => [String], nullable: true , default: []})
   walletsId: Array<string>;
 
   @IsNotEmpty()

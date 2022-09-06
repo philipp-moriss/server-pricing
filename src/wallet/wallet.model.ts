@@ -45,8 +45,8 @@ export class WalletModel extends Document{
 
   @Prop({
     type: () => [SpendingModel],
-    nullable: true
-  })
+    nullable: true,
+    default : []})
   history: Array<SpendingModel> | null;
 }
 
