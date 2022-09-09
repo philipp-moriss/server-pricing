@@ -1,8 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { IsEmail, IsNotEmpty } from "class-validator";
+import { Exclude } from "class-transformer";
 
 export type UserModelType = UserModel & Document;
 
@@ -11,16 +10,16 @@ export class UserModel extends Document {
   @Prop({ nullable: true })
   firstName: string;
 
-  @Prop({ nullable: true })
+  @Prop({ nullable: true, default: null })
   lastName: string;
 
-  @Prop({ nullable: true })
+  @Prop({ nullable: true, default: null })
   avatarImg: string;
 
-  @Prop({ nullable: true, default: 'user'})
+  @Prop({ nullable: true, default: null})
   permission: string;
 
-  @Prop({ nullable: true })
+  @Prop({ default: true })
   active: boolean;
 
   @Prop({ type: () => [String], nullable: true , default: []})
@@ -36,6 +35,7 @@ export class UserModel extends Document {
   })
   email: string;
 
+  @Exclude()
   @Prop({ maxlength: 120 })
   passwordHash: string;
 }
