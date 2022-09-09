@@ -5,7 +5,7 @@ import {SpendingModel} from '../spending/spending.model';
 import {UsersService} from '../user/users.service';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model, Types} from "mongoose";
-import {addWalletDto, updateWalletDto} from "./dto/wallet.dto";
+import {addWalletDto, updateWalletDto, Wallet} from "./dto/wallet.dto";
 
 @Injectable()
 export class WalletService {
@@ -16,7 +16,7 @@ export class WalletService {
     ) {
     }
 
-    async addWallet(userId: string, wallet: Omit<addWalletDto, 'userId'>) : Promise<WalletModel | null> {
+    async addWallet(userId: string, wallet: Wallet) : Promise<WalletModel | null> {
         try {
             const newWallet = new this.walletModel({...wallet})
             if (!newWallet) {
@@ -35,6 +35,7 @@ export class WalletService {
             return newWallet
         }catch (e) {
             console.log(e)
+            return null
         }
     }
 
@@ -60,6 +61,20 @@ export class WalletService {
             return null
         }
         return this.walletModel.findById({_id: currentWalletId});
+    }
+
+    async deleteWallet(walletId: string, userId : string): Promise<WalletModel | null> {
+        const currentUser = await this.usersService.getUserById(userId)
+        if (!currentUser || !currentUser.walletsId){
+            return null
+        }
+        const currentWalletId = currentUser.walletsId.find((walletIdItem) => String(walletIdItem) === walletId)
+        if (!currentWalletId) {
+            return null
+        }
+        currentUser.walletsId = currentUser.walletsId.filter((walletIdItem) => String(walletIdItem) !== walletId)
+        await this.usersService.updateUserById(userId, currentUser)
+        return this.walletModel.findByIdAndDelete({_id: currentWalletId});
     }
 
     async updateWallet({

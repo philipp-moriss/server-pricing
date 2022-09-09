@@ -25,26 +25,22 @@ export class getWalletDto {
   walletId: string;
 }
 
-export class addWalletDto {
-  @Type(() => Types.ObjectId)
-  @Transform(toMongoObjectId)
-  userId: string;
-  icon: string;
-  name: string;
-  balance: number;
-  currency: string;
-}
 
-export class addSpendingDto {
+export class deleteWalletDto {
   @Type(() => Types.ObjectId)
   @Transform(toMongoObjectId)
   userId: string;
   @Type(() => Types.ObjectId)
   @Transform(toMongoObjectId)
   walletId: string;
+}
+
+export class addWalletDto {
   @Type(() => Types.ObjectId)
   @Transform(toMongoObjectId)
-  spendingId: string;
+  @IsNotEmpty()
+  userId: string;
+  wallet : Wallet;
 }
 
 
@@ -57,5 +53,21 @@ export class updateWalletDto {
   @IsNotEmpty()
   @Transform(toMongoObjectId)
   walletId: string;
-  wallet : WalletModel;
+  wallet : Wallet;
+}
+
+
+export class Wallet {
+  @IsNotEmpty()
+  @Type(() => String)
+  icon: string;
+  @IsNotEmpty()
+  @Type(() => String)
+  name: string;
+  @IsNotEmpty()
+  @Type(() => Number)
+  balance: number;
+  @IsNotEmpty()
+  @Type(() => String)
+  currency: string;
 }
