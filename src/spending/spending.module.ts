@@ -1,7 +1,23 @@
 import { Module } from '@nestjs/common';
 import { SpendingController } from './spending.controller';
+import {WalletService} from "../wallet/wallet.service";
+import {MongooseModule} from "@nestjs/mongoose";
+import {WalletModel, WalletModelSchema} from "../wallet/wallet.model";
+import {UserModel, UserModelSchema} from "../user/user.model";
+import {SpendingModel, SpendingModelSchema} from "./spending.model";
+import { SpendingService } from './spending.service';
+import {UsersService} from "../user/users.service";
 
 @Module({
   controllers: [SpendingController],
+  providers: [WalletService, SpendingService, UsersService],
+  imports: [
+    MongooseModule.forFeature([
+      {name: WalletModel.name, schema: WalletModelSchema},
+      {name: UserModel.name, schema: UserModelSchema},
+      {name: SpendingModel.name, schema: SpendingModelSchema},
+    ])
+  ],
+  exports: [WalletService, SpendingService, UsersService],
 })
 export class SpendingModule {}

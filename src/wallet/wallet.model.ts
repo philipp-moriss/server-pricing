@@ -1,7 +1,6 @@
-import { SpendingModel } from '../spending/spending.model';
+import {SpendingModel} from '../spending/spending.model';
 import { Document } from 'mongoose';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-// export type WalletModelType = WalletModel & Document
 
 
 export class ICategory {

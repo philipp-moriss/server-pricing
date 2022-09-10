@@ -1,14 +1,8 @@
 import {Transform, Type} from "class-transformer";
 import {Types} from "mongoose";
 import {toMongoObjectId} from "../../dtoHandlers/userIdHandler";
-import {WalletModel} from "../wallet.model";
-import {Prop} from "@nestjs/mongoose";
 import {IsNotEmpty} from "class-validator";
 
-export class getSpendingDto {
-  walletId: string;
-  spendingId: string;
-}
 
 export class getAllWalletsDto {
   @Type(() => Types.ObjectId)
