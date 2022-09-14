@@ -8,8 +8,6 @@ import { AuthModule } from "./auth/auth.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { getMongoConfig } from "./configs/mongo.config";
-import { JwtModule } from "@nestjs/jwt";
-import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -23,7 +21,6 @@ import { TokenModule } from './token/token.module';
     AuthModule,
     SpendingModule,
     UserModule,
-    TokenModule
   ],
   controllers: [AppController],
   providers: [AppService]

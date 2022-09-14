@@ -6,13 +6,20 @@ import * as bcrypt from "bcrypt";
 import { CreateAuthDto } from "./dto/create-auth.dto";
 import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "./auth-token.model";
-import { TokenService } from "../token/token.service";
+import { JwtService } from "@nestjs/jwt";
+
+interface JwtPayload {
+  exp: number,
+  iat: number,
+  email: string,
+  _id: string,
+}
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private tokenService: TokenService,
+    private jwtService: JwtService,
     private authModelService: AuthModelService
   ) {
   }
@@ -28,7 +35,7 @@ export class AuthService {
 
     const newUser = await this.usersService.getUser(dto.email);
 
-    const token = this.tokenService.generateToken(newUser._id, newUser.email);
+    const token = this.generateToken(newUser._id, newUser.email);
 
     await this.authModelService.createTokenModel({ _id: newUser._id, token });
 
@@ -46,7 +53,7 @@ export class AuthService {
     }
     const { _id, email } = await this.usersService.getUser(dto.email);
 
-    const token = this.tokenService.generateToken(email, _id);
+    const token = this.generateToken(email, _id);
 
     const tokenInstance = await this.authModelService.updateToken({ _id, token });
 
@@ -61,5 +68,17 @@ export class AuthService {
 
   async logout(_id: string) {
     await this.authModelService.deleteTokenModel(_id);
+  }
+
+  generateToken(email: string, _id: string) {
+    return this.jwtService.sign({ email, _id });
+  }
+
+  checkTokenExpiry(jwt: string): JwtPayload | null {
+    const [, token] = jwt.split(" ");
+    const jwtPayload = this.jwtService.decode(token) as JwtPayload;
+    const currentTime = new Date().getTime() / 1000;
+    const isExpired = jwtPayload.exp < currentTime;
+    return !isExpired ? jwtPayload : null;
   }
 }

@@ -2,11 +2,10 @@ import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
-import { TokenService } from "../token/token.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService, private tokenService: TokenService) {
+  constructor(private authService: AuthService) {
   }
 
   @Post("register")
@@ -35,7 +34,7 @@ export class AuthController {
   @HttpCode(201)
   @Post("logout")
   async logout(@Headers("authorization") jwt: string) {
-    const jwtPayload = this.tokenService.checkTokenExpiry(jwt)
+    const jwtPayload = this.authService.checkTokenExpiry(jwt)
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
