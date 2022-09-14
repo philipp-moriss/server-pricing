@@ -1,11 +1,9 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {readDB} from '../mockBd/readDB';
+import {Injectable} from '@nestjs/common';
 import {WalletModel} from './wallet.model';
-import {SpendingModel} from '../spending/spending.model';
 import {UsersService} from '../user/users.service';
 import {InjectModel} from "@nestjs/mongoose";
-import {Model, Types} from "mongoose";
-import {addWalletDto, updateWalletDto, Wallet} from "./dto/wallet.dto";
+import {Model} from "mongoose";
+import {updateWalletDto, Wallet} from "./dto/wallet.dto";
 
 @Injectable()
 export class WalletService {

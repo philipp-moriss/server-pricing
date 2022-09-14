@@ -1,5 +1,5 @@
 import {IsNotEmpty} from "class-validator";
-import {Transform, Type} from "class-transformer";
+import {Transform} from "class-transformer";
 import {toMongoObjectId} from "../../dtoHandlers/userIdHandler";
 
 export class Spending {
