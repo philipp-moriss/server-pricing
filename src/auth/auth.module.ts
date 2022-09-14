@@ -5,15 +5,14 @@ import { UserModule } from "../user/user.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel, AuthTokenModelSchema } from "./auth-token.model";
-import { JwtModule, JwtService } from "@nestjs/jwt";
+import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./constants";
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, AuthModelService, JwtService],
+  providers: [AuthService, AuthModelService],
   imports: [
     UserModule,
-    MongooseModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: "1h" }
