@@ -7,6 +7,8 @@ import { CreateAuthDto } from "./dto/create-auth.dto";
 import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "./auth-token.model";
 import { JwtService } from "@nestjs/jwt";
+import {UserModel} from "../user/user.model";
+import {IAuthUser} from "../user/User";
 
 interface JwtPayload {
   exp: number,
@@ -46,7 +48,7 @@ export class AuthService {
     };
   }
 
-  async login(dto: RequestUserDto): Promise<AuthTokenModel | null> {
+  async login(dto: RequestUserDto): Promise<IAuthUser | null> {
     const isUserValid = await this.validateUser(dto);
     if (!isUserValid) {
       return null;
@@ -56,8 +58,12 @@ export class AuthService {
     const token = this.generateToken(email, _id);
 
     const tokenInstance = await this.authModelService.updateToken({ _id, token });
+    if (!tokenInstance){
+      return null
+    }
+    const user = await this.usersService.getUser(dto.email);
 
-    return tokenInstance;
+    return {user : {userId : user._id}, token: tokenInstance};
   }
 
   async validateUser({ email, password }: RequestUserDto): Promise<boolean> {

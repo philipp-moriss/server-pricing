@@ -2,6 +2,8 @@ import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
+import {UserModel} from "../user/user.model";
+import {IAuthUser} from "../user/User";
 
 @Controller("auth")
 export class AuthController {
@@ -19,7 +21,7 @@ export class AuthController {
 
   @HttpCode(201)
   @Post("login")
-  async login(@Body() dto: RequestUserDto) {
+  async login(@Body() dto: RequestUserDto) : Promise<IAuthUser | null> {
 
     if (!dto.email || !dto.password) {
       throw new HttpException("Login data was not provided", 401);
@@ -28,6 +30,7 @@ export class AuthController {
     if (!user) {
       throw new HttpException("Wrong email or password", 401);
     }
+    console.log(user)
     return user;
   }
 

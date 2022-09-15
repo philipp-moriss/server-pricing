@@ -33,15 +33,11 @@ export class WalletService {
     }
 
     async getAllWallets(userId: string) : Promise<Array<WalletModel> | null> {
-        try {
             const currentUser = await this.usersService.getUserById(userId)
             if (!currentUser || !currentUser.wallets){
                 return null
             }
             return currentUser.wallets
-        }catch (e) {
-            console.log(e)
-        }
     }
 
     async getWallet(walletId: string, userId : string): Promise<WalletModel | null> {
@@ -49,11 +45,11 @@ export class WalletService {
         if (!currentUser || !currentUser.wallets){
             return null
         }
-        const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
-        if (!currentWalletId) {
+        const currentWallet = currentUser.wallets.find((walletIdItem) => walletIdItem._id.toString() === walletId)
+        if (!currentWallet) {
             return null
         }
-        return this.walletModel.findById({_id: currentWalletId});
+        return this.walletModel.findById({_id: currentWallet._id});
     }
 
     async deleteWallet(walletId: string, userId : string): Promise<WalletModel | null> {
@@ -61,13 +57,13 @@ export class WalletService {
         if (!currentUser || !currentUser.wallets){
             return null
         }
-        const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
-        if (!currentWalletId) {
+        const currentWallet = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
+        if (!currentWallet) {
             return null
         }
         currentUser.wallets = currentUser.wallets.filter((walletIdItem) => String(walletIdItem._id) !== walletId)
         await this.usersService.updateUserById(userId, currentUser)
-        return this.walletModel.findByIdAndDelete({_id: currentWalletId});
+        return this.walletModel.findByIdAndDelete({_id: currentWallet._id});
     }
 
     async updateWallet({
@@ -80,11 +76,19 @@ export class WalletService {
             if (!currentUser || !currentUser.wallets){
                 return null
             }
-            const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
-            if (!currentWalletId) {
+            const currentWallet = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
+            if (!currentWallet) {
                 return null
             }
-            return this.walletModel.findByIdAndUpdate({_id: currentWalletId}, wallet, {overwrite : false, new: true});
+            currentUser.wallets = currentUser.wallets.map((_wallet) => {
+                if (_wallet._id.toString() === walletId) {
+                    const newWalletMap : WalletModel = Object.assign(_wallet, wallet)
+                    return newWalletMap
+                }
+                return _wallet
+            })
+            await this.usersService.updateUserById(currentUser._id, currentUser)
+            return this.walletModel.findByIdAndUpdate({_id: currentWallet._id}, wallet, {overwrite : false, new: true});
         }catch (e) {
             console.log(e)
         }
