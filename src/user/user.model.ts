@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { Exclude } from "class-transformer";
+import {WalletModel} from "../wallet/wallet.model";
 
 export type UserModelType = UserModel & Document;
 
@@ -23,7 +24,7 @@ export class UserModel extends Document {
   active: boolean;
 
   @Prop({ type: () => [String], nullable: true , default: []})
-  walletsId: Array<string>;
+  wallets: Array<WalletModel>;
 
   @IsNotEmpty()
   @IsEmail()
