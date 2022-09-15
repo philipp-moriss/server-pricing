@@ -15,7 +15,6 @@ export class WalletService {
     }
 
     async addWallet(userId: string, wallet: Wallet) : Promise<WalletModel | null> {
-        try {
             const newWallet = new this.walletModel({...wallet})
             if (!newWallet) {
                 return null
@@ -31,10 +30,6 @@ export class WalletService {
                 return null
             }
             return newWallet
-        }catch (e) {
-            console.log(e)
-            return null
-        }
     }
 
     async getAllWallets(userId: string) : Promise<Array<string> | null> {

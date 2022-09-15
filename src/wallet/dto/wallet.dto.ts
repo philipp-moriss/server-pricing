@@ -3,6 +3,20 @@ import {Types} from "mongoose";
 import {toMongoObjectId} from "../../dtoHandlers/userIdHandler";
 import {IsNotEmpty} from "class-validator";
 
+export class Wallet {
+  @IsNotEmpty()
+  @Type(() => String)
+  icon: string;
+  @IsNotEmpty()
+  @Type(() => String)
+  name: string;
+  @IsNotEmpty()
+  @Type(() => Number)
+  balance: number;
+  @IsNotEmpty()
+  @Type(() => String)
+  currency: string;
+}
 
 export class getAllWalletsDto {
   @Type(() => Types.ObjectId)
@@ -34,6 +48,7 @@ export class addWalletDto {
   @Transform(toMongoObjectId)
   @IsNotEmpty()
   userId: string;
+  @IsNotEmpty()
   wallet : Wallet;
 }
 
@@ -51,17 +66,4 @@ export class updateWalletDto {
 }
 
 
-export class Wallet {
-  @IsNotEmpty()
-  @Type(() => String)
-  icon: string;
-  @IsNotEmpty()
-  @Type(() => String)
-  name: string;
-  @IsNotEmpty()
-  @Type(() => Number)
-  balance: number;
-  @IsNotEmpty()
-  @Type(() => String)
-  currency: string;
-}
+
