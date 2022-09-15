@@ -3,6 +3,7 @@ import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import {WalletModel} from "../wallet/wallet.model";
 
 export type UserModelType = UserModel & Document;
 
@@ -24,7 +25,7 @@ export class UserModel extends Document {
   active: boolean;
 
   @Prop({ type: () => [String], nullable: true , default: []})
-  walletsId: Array<string>;
+  wallets: Array<WalletModel>;
 
   @IsNotEmpty()
   @IsEmail()

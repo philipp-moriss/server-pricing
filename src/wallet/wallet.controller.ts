@@ -20,7 +20,7 @@ export class WalletController {
     @Get('wallets')
     async getAllWallets(
         @Query() {userId}: getAllWalletsDto
-    ): Promise<Array<string> | null> {
+    ): Promise<Array<WalletModel> | null> {
         const wallets = await this.walletService.getAllWallets(userId)
         if (!wallets) {
             throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);

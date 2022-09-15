@@ -24,7 +24,7 @@ export class WalletService {
             if (!currentUser) {
                 return null
             }
-            currentUser.walletsId.push(newWallet._id)
+            currentUser.wallets.push(newWallet)
             const updateUser = await this.usersService.updateUserById(userId, currentUser)
             if (!updateUser) {
                 return null
@@ -32,13 +32,13 @@ export class WalletService {
             return newWallet
     }
 
-    async getAllWallets(userId: string) : Promise<Array<string> | null> {
+    async getAllWallets(userId: string) : Promise<Array<WalletModel> | null> {
         try {
             const currentUser = await this.usersService.getUserById(userId)
-            if (!currentUser || !currentUser.walletsId){
+            if (!currentUser || !currentUser.wallets){
                 return null
             }
-            return currentUser.walletsId
+            return currentUser.wallets
         }catch (e) {
             console.log(e)
         }
@@ -46,10 +46,10 @@ export class WalletService {
 
     async getWallet(walletId: string, userId : string): Promise<WalletModel | null> {
         const currentUser = await this.usersService.getUserById(userId)
-        if (!currentUser || !currentUser.walletsId){
+        if (!currentUser || !currentUser.wallets){
             return null
         }
-        const currentWalletId = currentUser.walletsId.find((walletIdItem) => String(walletIdItem) === walletId)
+        const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
         if (!currentWalletId) {
             return null
         }
@@ -58,14 +58,14 @@ export class WalletService {
 
     async deleteWallet(walletId: string, userId : string): Promise<WalletModel | null> {
         const currentUser = await this.usersService.getUserById(userId)
-        if (!currentUser || !currentUser.walletsId){
+        if (!currentUser || !currentUser.wallets){
             return null
         }
-        const currentWalletId = currentUser.walletsId.find((walletIdItem) => String(walletIdItem) === walletId)
+        const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
         if (!currentWalletId) {
             return null
         }
-        currentUser.walletsId = currentUser.walletsId.filter((walletIdItem) => String(walletIdItem) !== walletId)
+        currentUser.wallets = currentUser.wallets.filter((walletIdItem) => String(walletIdItem._id) !== walletId)
         await this.usersService.updateUserById(userId, currentUser)
         return this.walletModel.findByIdAndDelete({_id: currentWalletId});
     }
@@ -77,10 +77,10 @@ export class WalletService {
                        } : updateWalletDto): Promise<WalletModel | null> {
         try {
             const currentUser = await this.usersService.getUserById(userId)
-            if (!currentUser || !currentUser.walletsId){
+            if (!currentUser || !currentUser.wallets){
                 return null
             }
-            const currentWalletId = currentUser.walletsId.find((walletIdItem) => String(walletIdItem) === walletId)
+            const currentWalletId = currentUser.wallets.find((walletIdItem) => String(walletIdItem._id) === walletId)
             if (!currentWalletId) {
                 return null
             }
