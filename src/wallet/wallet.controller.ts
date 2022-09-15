@@ -1,22 +1,11 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, Query,} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Query,} from '@nestjs/common';
 import {WalletService} from './wallet.service';
-import {SpendingModel} from '../spending/spending.model';
 import {WalletModel} from './wallet.model';
-import {addWalletDto, getAllWalletsDto, getSpendingDto, getWalletDto} from './dto/wallet.dto';
+import {addWalletDto, getAllWalletsDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
 
 @Controller('wallet')
 export class WalletController {
     constructor(private walletService: WalletService) {
-    }
-
-    @Post()
-    async addWallet(@Body() dto: addWalletDto): Promise<WalletModel | null> {
-        const {userId, ...wallet} = dto
-        const result = await this.walletService.addWallet(userId, wallet)
-        if (!result) {
-            throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
-        }
-        return result
     }
 
     @Get()
@@ -30,24 +19,31 @@ export class WalletController {
 
     @Get('wallets')
     async getAllWallets(
-        @Query() query: getAllWalletsDto
-    ) : Promise<Array<string> | null> {
-        const wallets = await this.walletService.getAllWallets(query.userId)
+        @Query() {userId}: getAllWalletsDto
+    ): Promise<Array<string> | null> {
+        const wallets = await this.walletService.getAllWallets(userId)
         if (!wallets) {
             throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
         }
         return wallets
     }
 
+    @Post()
+    async addWallet(@Body() dto: addWalletDto): Promise<WalletModel | null> {
+        const {userId, ...wallet} = dto
+        const result = await this.walletService.addWallet(userId, wallet)
+        if (!result) {
+            throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
+        }
+        return result
+    }
 
-
-
-    @Post('spending')
-    async getSpending(@Body() dto: getSpendingDto): Promise<SpendingModel> {
-        const spending = await this.walletService.getSpendingById(
-            dto.walletId,
-            dto.spendingId,
-        );
-        return spending;
+    @Put()
+    async updateWallet(@Body() dto: updateWalletDto): Promise<WalletModel | null> {
+        const updateWallet = await this.walletService.updateWallet(dto)
+        if (!updateWallet) {
+            throw new HttpException('userId or walletId not Found', HttpStatus.NOT_FOUND);
+        }
+        return updateWallet
     }
 }

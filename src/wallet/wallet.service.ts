@@ -5,7 +5,7 @@ import {SpendingModel} from '../spending/spending.model';
 import {UsersService} from '../user/users.service';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model, Types} from "mongoose";
-import {addWalletDto} from "./dto/wallet.dto";
+import {addWalletDto, updateWalletDto} from "./dto/wallet.dto";
 
 @Injectable()
 export class WalletService {
@@ -39,11 +39,15 @@ export class WalletService {
     }
 
     async getAllWallets(userId: string) : Promise<Array<string> | null> {
-        const currentUser = await this.usersService.getUserById(userId)
-        if (!currentUser || !currentUser.walletsId){
-            return null
+        try {
+            const currentUser = await this.usersService.getUserById(userId)
+            if (!currentUser || !currentUser.walletsId){
+                return null
+            }
+            return currentUser.walletsId
+        }catch (e) {
+            console.log(e)
         }
-        return currentUser.walletsId
     }
 
     async getWallet(walletId: string, userId : string): Promise<WalletModel | null> {
@@ -58,16 +62,23 @@ export class WalletService {
         return this.walletModel.findById({_id: currentWalletId});
     }
 
-
-
-    async getSpendingById(
-        walletId: string,
-        spendingId: string,
-    ): Promise<SpendingModel> {
-        const wallets = (await readDB('wallet')) as Array<WalletModel>;
-        if (!wallets) return null;
-        const history = wallets.find((wallet) => wallet._id === walletId)?.history;
-        if (!history) return null;
-        return history.find((spending) => spending._id === spendingId);
+    async updateWallet({
+                           walletId,
+                           userId,
+                           wallet
+                       } : updateWalletDto): Promise<WalletModel | null> {
+        try {
+            const currentUser = await this.usersService.getUserById(userId)
+            if (!currentUser || !currentUser.walletsId){
+                return null
+            }
+            const currentWalletId = currentUser.walletsId.find((walletIdItem) => String(walletIdItem) === walletId)
+            if (!currentWalletId) {
+                return null
+            }
+            return this.walletModel.findByIdAndUpdate({_id: currentWalletId}, wallet, {overwrite : false, new: true});
+        }catch (e) {
+            console.log(e)
+        }
     }
 }
