@@ -8,7 +8,7 @@ import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "./auth-token.model";
 import { JwtService } from "@nestjs/jwt";
 
-interface JwtPayload {
+export interface JwtPayload {
   exp: number,
   iat: number,
   email: string,
@@ -26,19 +26,13 @@ export class AuthService {
 
   async register(dto: CreateAuthDto): Promise<AuthModel> {
     const existingUser = await this.usersService.getUser(dto.email);
-
     if (existingUser) {
       throw new HttpException("User already exists", HttpStatus.CONFLICT);
     }
-
     await this.usersService.createUser(dto);
-
     const newUser = await this.usersService.getUser(dto.email);
-
     const token = this.generateToken(newUser._id, newUser.email);
-
     await this.authModelService.createTokenModel({ _id: newUser._id, token });
-
     return {
       email: newUser.email,
       _id: newUser._id,
@@ -52,11 +46,8 @@ export class AuthService {
       return null;
     }
     const { _id, email } = await this.usersService.getUser(dto.email);
-
     const token = this.generateToken(email, _id);
-
     const tokenInstance = await this.authModelService.updateToken({ _id, token });
-
     return tokenInstance;
   }
 
@@ -77,8 +68,9 @@ export class AuthService {
   checkTokenExpiry(jwt: string): JwtPayload | null {
     const [, token] = jwt.split(" ");
     const jwtPayload = this.jwtService.decode(token) as JwtPayload;
-    const currentTime = new Date().getTime() / 1000;
-    const isExpired = jwtPayload.exp < currentTime;
+    const currentTime = new Date().getTime();
+    const expirationTime = jwtPayload.exp * 1000
+    const isExpired = expirationTime < currentTime;
     return !isExpired ? jwtPayload : null;
   }
 }

@@ -20,7 +20,6 @@ export class AuthController {
   @HttpCode(201)
   @Post("login")
   async login(@Body() dto: RequestUserDto) {
-
     if (!dto.email || !dto.password) {
       throw new HttpException("Login data was not provided", 401);
     }
@@ -38,6 +37,7 @@ export class AuthController {
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
+      console.log(jwtPayload);
       await this.authService.logout(jwtPayload._id);
     }
   }
