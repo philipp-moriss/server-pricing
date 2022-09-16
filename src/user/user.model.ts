@@ -35,8 +35,7 @@ export class UserModel extends Document {
   })
   email: string;
 
-  @Exclude()
-  @Prop({ maxlength: 120 })
+  @Prop({ maxlength: 120, select: false })
   passwordHash: string;
 }
 
