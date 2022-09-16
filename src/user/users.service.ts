@@ -11,9 +11,9 @@ export class UsersService {
     @InjectModel(UserModel.name) private userModel: Model<UserModelType>,
   ) {}
 
-  async createUser({ password, email }: CreateAuthDto): Promise<UserModel> {
+  async createUser({ password, email, lastName, firstName }: CreateAuthDto): Promise<UserModel> {
     const passwordHash = await this.hashPassword(password);
-    const newUser = new this.userModel({ email, passwordHash });
+    const newUser = new this.userModel({ email, passwordHash, firstName, lastName });
     return newUser.save();
   }
 
