@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { Exclude } from "class-transformer";
-import {WalletModel} from "../wallet/wallet.model";
+import { WalletModel } from "../wallet/wallet.model";
 
 export type UserModelType = UserModel & Document;
 
