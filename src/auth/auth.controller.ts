@@ -30,7 +30,6 @@ export class AuthController {
     if (!user) {
       throw new HttpException("Wrong email or password", 401);
     }
-    console.log(user)
     return user;
   }
 

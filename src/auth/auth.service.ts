@@ -83,8 +83,9 @@ export class AuthService {
   checkTokenExpiry(jwt: string): JwtPayload | null {
     const [, token] = jwt.split(" ");
     const jwtPayload = this.jwtService.decode(token) as JwtPayload;
-    const currentTime = new Date().getTime() / 1000;
-    const isExpired = jwtPayload.exp < currentTime;
+    const currentTime = new Date().getTime();
+    const expirationTime = jwtPayload.exp * 1000
+    const isExpired = expirationTime < currentTime;
     return !isExpired ? jwtPayload : null;
   }
 }
