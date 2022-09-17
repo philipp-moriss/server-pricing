@@ -2,7 +2,7 @@ import { Controller, Get, Headers, HttpException, HttpStatus } from "@nestjs/com
 import { UsersService } from "./users.service";
 import { UserModel } from "./user.model";
 import { JwtService } from "@nestjs/jwt";
-import { AuthService } from "../auth/auth.service";
+import { AuthService } from "../auth/services/auth.service";
 
 @Controller("users")
 export class UserController {

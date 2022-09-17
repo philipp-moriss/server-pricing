@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UsersService } from "../user/users.service";
-import { RequestUserDto } from "./dto/request-auth.dto";
-import { AuthModel } from "./auth.model";
+import { UsersService } from "../../user/users.service";
+import { RequestUserDto } from "../dto/request-auth.dto";
+import { AuthModel } from "../models/auth.model";
 import * as bcrypt from "bcrypt";
-import { CreateAuthDto } from "./dto/create-auth.dto";
+import { CreateAuthDto } from "../dto/create-auth.dto";
 import { AuthModelService } from "./auth-model.service";
-import { AuthTokenModel } from "./auth-token.model";
+import { AuthTokenModel } from "../models/auth-token.model";
 import { JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "./constants";
+import { jwtConstants } from "../constants";
 
 export interface JwtPayload {
   exp: number,

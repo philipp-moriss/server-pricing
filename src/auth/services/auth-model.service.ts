@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { AuthTokenModel, AuthTokenModelType } from "./auth-token.model";
+import { AuthTokenModel, AuthTokenModelType } from "../models/auth-token.model";
 import { Model } from "mongoose";
-import { LoginResponseDto } from "./dto/login-response-dto";
+import { LoginResponseDto } from "../dto/login-response-dto";
 
 @Injectable()
 export class AuthModelService {
@@ -34,6 +34,5 @@ export class AuthModelService {
 
   async deleteTokenModel(_id: string) {
     await this.authTokenModel.deleteOne({ _id });
-    console.log(_id);
   }
 }

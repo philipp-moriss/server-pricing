@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post, Res } from "@nestjs/common";
 import { RequestUserDto } from "./dto/request-auth.dto";
-import { AuthService } from "./auth.service";
+import { AuthService } from "./services/auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
 import { Response } from "express";
 

@@ -4,11 +4,14 @@ import { UserModel, UserModelType } from './user.model';
 import {Model, Types} from 'mongoose';
 import { CreateAuthDto } from '../auth/dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
+import { UserPassModel, UserPassModelType } from "../auth/models/user-pass.model";
+import { UserPassService } from "../auth/services/user-pass.service";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserModel.name) private userModel: Model<UserModelType>,
+    // private userPassService: UserPassService
   ) {}
 
   async createUser({ password, email, lastName, firstName }: CreateAuthDto): Promise<UserModel> {

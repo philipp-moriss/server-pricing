@@ -4,13 +4,11 @@ import {AddSpendingDto, DeleteSpendingDto, GetSpendingDto, UpdateSpendingDto} fr
 import {WalletService} from "../wallet/wallet.service";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
-import {UsersService} from "../user/users.service";
 
 @Injectable()
 export class SpendingService {
 
     constructor(
-        private usersService: UsersService,
         private walletService: WalletService,
         @InjectModel(SpendingModel.name) private spendingModel: Model<SpendingModel>
     ) {
