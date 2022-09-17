@@ -34,5 +34,6 @@ export class AuthModelService {
 
   async deleteTokenModel(_id: string) {
     await this.authTokenModel.deleteOne({ _id });
+    console.log(_id);
   }
 }

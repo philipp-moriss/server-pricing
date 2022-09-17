@@ -1,7 +1,8 @@
-import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post, Res } from "@nestjs/common";
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
+import { Response } from "express";
 
 @Controller("auth")
 export class AuthController {
@@ -30,15 +31,15 @@ export class AuthController {
     return user;
   }
 
-  @HttpCode(201)
   @Post("logout")
+  @HttpCode(201)
   async logout(@Headers("authorization") jwt: string) {
-    const jwtPayload = this.authService.checkTokenExpiry(jwt)
+    const jwtPayload = this.authService.checkTokenExpiry(jwt);
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
-      console.log(jwtPayload);
       await this.authService.logout(jwtPayload._id);
+      return 201;
     }
   }
 }
