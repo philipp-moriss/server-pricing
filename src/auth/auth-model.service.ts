@@ -21,15 +21,15 @@ export class AuthModelService {
   }
 
   async updateToken(dto: LoginResponseDto) {
-    const oldModel = await this.getTokenModel(dto._id)
+    const oldModel = await this.getTokenModel(dto._id);
 
     if (oldModel) {
-      const res = await this.authTokenModel.findByIdAndUpdate(dto._id, { token: dto.token });
+      const res = await this.authTokenModel.findByIdAndUpdate(dto._id, { token: dto.token }, { new: true });
       return res;
     }
 
     const res = await this.createTokenModel(dto);
-    return res
+    return res;
   }
 
   async deleteTokenModel(_id: string) {

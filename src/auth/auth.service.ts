@@ -7,6 +7,7 @@ import { CreateAuthDto } from "./dto/create-auth.dto";
 import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "./auth-token.model";
 import { JwtService } from "@nestjs/jwt";
+import { jwtConstants } from "./constants";
 
 export interface JwtPayload {
   exp: number,
@@ -65,12 +66,11 @@ export class AuthService {
     return this.jwtService.sign({ email, _id });
   }
 
-  checkTokenExpiry(jwt: string): JwtPayload | null {
+  checkTokenExpiry(jwt: string): any {
     const [, token] = jwt.split(" ");
-    const jwtPayload = this.jwtService.decode(token) as JwtPayload;
-    const currentTime = new Date().getTime();
-    const expirationTime = jwtPayload.exp * 1000
-    const isExpired = expirationTime < currentTime;
-    return !isExpired ? jwtPayload : null;
+    const payload = this.jwtService.verify<JwtPayload>(token, {
+      secret: jwtConstants.secret
+    });
+    return payload;
   }
 }
