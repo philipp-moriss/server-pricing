@@ -20,6 +20,12 @@ export class WalletModel extends Document{
   @Prop()
   icon: string;
 
+
+  @Prop({
+    required: true,
+  })
+  userId: string;
+
   @Prop({
     required: true,
   })
