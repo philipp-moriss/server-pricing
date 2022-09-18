@@ -8,7 +8,7 @@ export type UserModelType = UserModel & Document;
 
 @Schema({ timestamps: true, validateBeforeSave: true })
 export class UserModel extends Document {
-  @Prop({ nullable: true })
+  @Prop({ nullable: true, default: null })
   firstName: string;
 
   @Prop({ nullable: true, default: null })

@@ -1,14 +1,18 @@
-import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post } from "@nestjs/common";
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./services/auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
-import { Response } from "express";
+import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { AuthModel } from "./models/auth.model";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {
   }
 
+  @ApiOperation({ summary: "New user register" })
+  @ApiResponse({ status: 201, type: AuthModel })
+  @HttpCode(201)
   @Post("register")
   async registration(@Body() dto: CreateAuthDto) {
     const newUser = await this.authService.register(dto);
