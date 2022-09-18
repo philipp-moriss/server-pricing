@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
 import {WalletModel} from './wallet.model';
-import {UsersService} from '../user/users.service';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 import {updateWalletDto, Wallet} from "./dto/wallet.dto";
@@ -9,7 +8,6 @@ import {updateWalletDto, Wallet} from "./dto/wallet.dto";
 export class WalletService {
 
     constructor(
-        private usersService: UsersService,
         @InjectModel(WalletModel.name) private walletModel: Model<WalletModel>,
     ) {
     }
