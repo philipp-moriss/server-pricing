@@ -11,7 +11,6 @@ export class AuthModelService {
 
   async getTokenModel(_id: string) {
     const model = await this.authTokenModel.findById(_id);
-
     return model;
   }
 
@@ -24,7 +23,9 @@ export class AuthModelService {
     const oldModel = await this.getTokenModel(dto._id);
 
     if (oldModel) {
-      const res = await this.authTokenModel.findByIdAndUpdate(dto._id, { token: dto.token }, { new: true });
+      const res = await this.authTokenModel.findByIdAndUpdate(dto._id,
+        { token: dto.token },
+        { new: true });
       return res;
     }
 

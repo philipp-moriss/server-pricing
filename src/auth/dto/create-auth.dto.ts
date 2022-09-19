@@ -5,8 +5,8 @@ export class CreateAuthDto {
   readonly email: string;
   @ApiProperty({ example: "Any pass", description: "Any pass" })
   readonly password: string;
-  @ApiProperty({ example: "Jack", description: "User first name" })
+  @ApiProperty({ example: "Jack", description: "User first name", required: false })
   readonly firstName: string;
-  @ApiProperty({ example: "Sparrow", description: "User last name" })
+  @ApiProperty({ example: "Sparrow", description: "User last name", required: false })
   readonly lastName: string;
 }

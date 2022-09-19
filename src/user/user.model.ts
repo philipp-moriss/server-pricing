@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { IsEmail, IsNotEmpty } from "class-validator";
 import { WalletModel } from "../wallet/wallet.model";
 
 export type UserModelType = UserModel & Document;
@@ -22,11 +21,6 @@ export class UserModel extends Document {
   @Prop({ default: true })
   active: boolean;
 
-  @Prop({ type: () => [String], nullable: true , default: []})
-  wallets: Array<WalletModel>;
-
-  @IsNotEmpty()
-  @IsEmail()
   @Prop({
     unique: true,
     lowercase: true,
@@ -34,9 +28,6 @@ export class UserModel extends Document {
     trim: true,
   })
   email: string;
-
-  @Prop({ maxlength: 120 })
-  passwordHash: string;
 }
 
 export const UserModelSchema = SchemaFactory.createForClass(UserModel);

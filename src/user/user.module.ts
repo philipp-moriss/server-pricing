@@ -12,13 +12,13 @@ import { UserPassService } from "../auth/services/user-pass.service";
 
 @Module({
   controllers: [UserController],
-  providers: [UsersService, AuthService, AuthModelService],
+  providers: [UsersService, AuthService, AuthModelService, UserPassService],
   imports: [
     JwtModule,
     MongooseModule.forFeature([
       { name: UserModel.name, schema: UserModelSchema },
       { name: AuthTokenModel.name, schema: AuthTokenModelSchema },
-      // { name: UserPassModel.name, schema: UserPassSchema }
+      { name: UserPassModel.name, schema: UserPassSchema }
     ])
   ],
   exports: [UsersService]

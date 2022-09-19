@@ -8,6 +8,7 @@ import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "../models/auth-token.model";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../constants";
+import { UserPassService } from "./user-pass.service";
 
 export interface JwtPayload {
   exp: number,
@@ -54,7 +55,8 @@ export class AuthService {
 
   async validateUser({ email, password }: RequestUserDto): Promise<boolean> {
     const user = await this.usersService.getUser(email);
-    const isEqual = await bcrypt.compare(password, user.passwordHash);
+    const pass = await this.usersService.getPassModelById(user._id)
+    const isEqual = await bcrypt.compare(password, pass.passwordHash);
     return isEqual;
   }
 

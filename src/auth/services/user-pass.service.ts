@@ -9,6 +9,11 @@ export class UserPassService {
   constructor(@InjectModel(UserPassModel.name) private userPassModel: Model<UserPassModelType>) {
   }
 
+  async get(_id) {
+    const res = await this.userPassModel.findById(_id);
+    return res;
+  }
+
   async create(dto: UserPassDto) {
     await this.userPassModel.create(dto);
   }
