@@ -32,7 +32,18 @@ export class SpendingService {
         if (!currentSpending) {
             return null
         }
-        return this.spendingModel.findByIdAndUpdate({_id: spending._id}, spending, {new : true, overwrite: false});
+        const newSpending = await this.spendingModel.findByIdAndUpdate({_id: spending._id}, spending, {new : true, overwrite: false});
+        const currentWallet = await this.walletService.getWallet(walletId, userId)
+        currentWallet.history = currentWallet.history.map((spending) => {
+            if (spending._id.toString() === newSpending._id.toString()) {
+                return newSpending
+            }else return spending
+        })
+        const isSave = await currentWallet.save()
+        if (!isSave) {
+            return null
+        }
+        return newSpending
     }
 
     async addSpending({walletId, userId, spending}: AddSpendingDto): Promise<SpendingModel | null> {
