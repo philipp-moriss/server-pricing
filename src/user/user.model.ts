@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { WalletModel } from "../wallet/wallet.model";
 
 export type UserModelType = UserModel & Document;
 
 @Schema({ timestamps: true, validateBeforeSave: true })
 export class UserModel extends Document {
+
   @Prop({ nullable: true, default: null })
   firstName: string;
 

@@ -1,9 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { mailExample, passExample } from "../constants";
 
 export class CreateAuthDto {
-  @ApiProperty({ example: "example@mail.com", description: "User email" })
+  @ApiProperty(mailExample)
   readonly email: string;
-  @ApiProperty({ example: "Any pass", description: "Any pass" })
+  @ApiProperty(passExample)
   readonly password: string;
   @ApiProperty({ example: "Jack", description: "User first name", required: false })
   readonly firstName: string;

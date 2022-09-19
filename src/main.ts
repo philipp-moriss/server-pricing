@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('ponyWeb backend 0.6')
-    .setDescription('API Documentation')
+    .setDescription('Root api url: /api')
     .setVersion('0.6')
     .addTag('ponyWeb')
     .build()

@@ -2,10 +2,13 @@ import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./services/auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthModel } from "./models/auth.model";
 import { JWTService } from "./services/jwt.service";
+import { UserModel } from "../user/user.model";
+import { RefreshDto } from "./dto/refresh.dto";
 
+@ApiTags("Authorization")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService,
@@ -24,6 +27,8 @@ export class AuthController {
     return newUser;
   }
 
+  @ApiOperation({ summary: "User login" })
+  @ApiResponse({ status: 201, type: UserModel })
   @HttpCode(201)
   @Post("login")
   async login(@Body() dto: RequestUserDto) {
@@ -37,6 +42,8 @@ export class AuthController {
     return user;
   }
 
+  @ApiOperation({ summary: "Current user logging out" })
+  @ApiResponse({ status: 201 })
   @Post("logout")
   @HttpCode(201)
   async logout(@Headers("authorization") jwt: string) {
@@ -49,6 +56,9 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({ summary: "Refresh expired token" })
+  @ApiResponse({ status: 201, type: RefreshDto })
+  @HttpCode(201)
   @Post("refresh")
   async refresh(@Headers("authorization") jwt: string) {
     const [, token] = jwt.split(" ");
