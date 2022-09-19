@@ -4,10 +4,12 @@ import { AuthService } from "./services/auth.service";
 import { CreateAuthDto } from "./dto/create-auth.dto";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { AuthModel } from "./models/auth.model";
+import { JWTService } from "./services/jwt.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private jwtService: JWTService) {
   }
 
   @ApiOperation({ summary: "New user register" })
@@ -38,12 +40,19 @@ export class AuthController {
   @Post("logout")
   @HttpCode(201)
   async logout(@Headers("authorization") jwt: string) {
-    const jwtPayload = this.authService.checkTokenExpiry(jwt);
+    const jwtPayload = this.jwtService.checkTokenExpiry(jwt);
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
       await this.authService.logout(jwtPayload._id);
       return 201;
     }
+  }
+
+  @Post("refresh")
+  async refresh(@Headers("authorization") jwt: string) {
+    const [, token] = jwt.split(" ");
+    const newToken = this.authService.refreshToken(token);
+    return { token: newToken };
   }
 }

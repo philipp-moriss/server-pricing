@@ -6,9 +6,7 @@ import * as bcrypt from "bcrypt";
 import { CreateAuthDto } from "../dto/create-auth.dto";
 import { AuthModelService } from "./auth-model.service";
 import { AuthTokenModel } from "../models/auth-token.model";
-import { JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "../constants";
-import { UserPassService } from "./user-pass.service";
+import { JWTService } from "./jwt.service";
 
 export interface JwtPayload {
   exp: number,
@@ -21,8 +19,8 @@ export interface JwtPayload {
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService,
-    private authModelService: AuthModelService
+    private authModelService: AuthModelService,
+    private jwtService: JWTService
   ) {
   }
 
@@ -33,7 +31,7 @@ export class AuthService {
     }
     await this.usersService.createUser(dto);
     const newUser = await this.usersService.getUser(dto.email);
-    const token = this.generateToken(newUser._id, newUser.email);
+    const token = this.jwtService.generateShortToken(newUser._id, newUser.email);
     await this.authModelService.createTokenModel({ _id: newUser._id, token });
     return {
       email: newUser.email,
@@ -48,31 +46,26 @@ export class AuthService {
       return null;
     }
     const { _id, email } = await this.usersService.getUser(dto.email);
-    const token = this.generateToken(email, _id);
+    const token = this.jwtService.generateShortToken(email, _id);
     const tokenInstance = await this.authModelService.updateToken({ _id, token });
     return tokenInstance;
   }
 
+  async refreshToken(jwt: string) {
+    const { _id, email } = this.jwtService.decodeToken<JwtPayload>(jwt);
+    const payload = this.jwtService.generateLongToken(email, _id);
+    console.log(payload);
+    return payload;
+  }
+
   async validateUser({ email, password }: RequestUserDto): Promise<boolean> {
     const user = await this.usersService.getUser(email);
-    const pass = await this.usersService.getPassModelById(user._id)
+    const pass = await this.usersService.getPassModelById(user._id);
     const isEqual = await bcrypt.compare(password, pass.passwordHash);
     return isEqual;
   }
 
   async logout(_id: string) {
     await this.authModelService.deleteTokenModel(_id);
-  }
-
-  generateToken(email: string, _id: string) {
-    return this.jwtService.sign({ email, _id });
-  }
-
-  checkTokenExpiry(jwt: string): any {
-    const [, token] = jwt.split(" ");
-    const payload = this.jwtService.verify<JwtPayload>(token, {
-      secret: jwtConstants.secret
-    });
-    return payload;
   }
 }
