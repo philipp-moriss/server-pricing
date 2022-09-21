@@ -61,8 +61,7 @@ export class AuthController {
   @HttpCode(201)
   @Post("refresh")
   async refresh(@Headers("authorization") jwt: string) {
-    const [, token] = jwt.split(" ");
-    const newToken = this.authService.refreshToken(token);
+    const newToken = await this.authService.refreshToken(jwt);
     return { token: newToken };
   }
 }

@@ -7,7 +7,7 @@ import {
   UnauthorizedException
 } from "@nestjs/common";
 import { Observable } from "rxjs";
-import { JWTService } from "../services/jwt.service";
+import { JWTService } from "../auth/services/jwt.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,8 +26,12 @@ export class AuthGuard implements CanActivate {
       const isVerified = this.jwtService.checkTokenExpiry(token);
       return !!isVerified;
     } catch (e: any) {
-      const { statusCode, message } = e.response;
-      throw new HttpException(message, statusCode);
+      if (e.statusCode) {
+        const { statusCode, message } = e.response;
+        throw new HttpException(message, statusCode);
+      }
+      const { response, status } = e;
+      throw new HttpException(response, status);
     }
   }
 }

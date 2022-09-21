@@ -13,7 +13,7 @@ export class JWTService {
   generateShortToken(email: string, _id: string) {
     return this.jwtService.sign({ email, _id }, {
       secret: jwtConstants.secret,
-      expiresIn: "15m"
+      expiresIn: "15s"
     });
   }
 
@@ -24,20 +24,20 @@ export class JWTService {
     });
   }
 
-  checkTokenExpiry(jwt: string): JwtPayload {
+  checkTokenExpiry(token: string): JwtPayload {
     try {
-      const [, token] = jwt.split(" ");
       const payload = this.jwtService.verify<JwtPayload>(token, {
         secret: jwtConstants.secret
       });
       return payload;
-    } catch (e: any) {
-      throw new ForbiddenException('jwt expired');
+    } catch (_) {
+      throw new HttpException("jwt expired", HttpStatus.FORBIDDEN);
     }
   }
 
   decodeToken<T>(jwt: string): T {
-    const payload = this.jwtService.decode(jwt) as T;
+    const [, token] = jwt.split(" ");
+    const payload = this.jwtService.decode(token) as T;
     return payload;
   }
 }
