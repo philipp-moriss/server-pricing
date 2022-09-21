@@ -13,7 +13,7 @@ export class JWTService {
   generateShortToken(email: string, _id: string) {
     return this.jwtService.sign({ email, _id }, {
       secret: jwtConstants.secret,
-      expiresIn: "15s"
+      expiresIn: "15m"
     });
   }
 
