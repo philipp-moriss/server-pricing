@@ -47,7 +47,8 @@ export class AuthController {
   @Post("logout")
   @HttpCode(201)
   async logout(@Headers("authorization") jwt: string) {
-    const jwtPayload = this.jwtService.checkTokenExpiry(jwt);
+    const [, token] = jwt.split(" ", 2);
+    const jwtPayload = this.jwtService.checkTokenExpiry(token);
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
