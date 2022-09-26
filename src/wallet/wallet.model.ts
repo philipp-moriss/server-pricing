@@ -46,23 +46,39 @@ export class WalletModel extends Document{
     type: () => [ICategory],
     nullable: true,
     default: [
-        {
-          _id: new Types.ObjectId(),
-          value: 'clothes',
-        },
-        {
-          _id: new Types.ObjectId(),
-          value: 'food',
-        },
-        {
-          _id: new Types.ObjectId(),
-          value: 'other',
-        },
-        {
-          _id: new Types.ObjectId(),
-          value: 'store',
-        },
-        ],
+      {
+        _id: new Types.ObjectId(),
+        value: "Food Store"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Clothing Shop"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Communal services"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Entertainment"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Auto services"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Gifts"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Cigarettes and alcohol"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "Other"
+      }
+    ],
   })
   myCategories: Array<ICategory>;
 
