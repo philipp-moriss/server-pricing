@@ -10,6 +10,20 @@ export class SpendingModel extends Document{
     nullable: false,
   })
   title: string;
+
+
+
+  @Prop({
+    required: true,
+  })
+  userId: string;
+
+  @Prop({
+    required: true,
+  })
+  walletId: string;
+
+
   @Prop({
     type: () => String,
     nullable: true,
@@ -25,6 +39,11 @@ export class SpendingModel extends Document{
     nullable: false,
   })
   amount: number;
+
+  @Prop({
+    type: () => Date,
+    nullable: false,
+  })
   date: Date;
 }
 

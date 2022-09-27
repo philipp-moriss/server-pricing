@@ -1,4 +1,4 @@
-import {SpendingModel} from '../spending/spending.model';
+// import {SpendingModel} from '../spending/spending.model';
 import {Document, Types} from 'mongoose';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
@@ -82,11 +82,11 @@ export class WalletModel extends Document{
   })
   myCategories: Array<ICategory>;
 
-  @Prop({
-    type: () => [SpendingModel],
-    nullable: true,
-    default : []})
-  history: Array<SpendingModel> | null;
+  // @Prop({
+  //   type: () => [SpendingModel],
+  //   nullable: true,
+  //   default : []})
+  // history: Array<SpendingModel> | null;
 }
 
 
