@@ -56,6 +56,7 @@ export class SpendingService {
             return null
         }
         currentWallet.history.push(newSpending)
+        currentWallet.balance = currentWallet.balance - newSpending.amount
         const newWallet = await this.walletService.updateWallet({walletId, userId, wallet: currentWallet})
         if (!newWallet) {
             return null

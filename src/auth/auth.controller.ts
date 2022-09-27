@@ -47,7 +47,8 @@ export class AuthController {
   @Post("logout")
   @HttpCode(201)
   async logout(@Headers("authorization") jwt: string) {
-    const jwtPayload = this.jwtService.checkTokenExpiry(jwt);
+    const [, token] = jwt.split(" ", 2);
+    const jwtPayload = this.jwtService.checkTokenExpiry(token);
     if (!jwtPayload) {
       throw new HttpException("Your token is expired", 400);
     } else {
@@ -61,8 +62,7 @@ export class AuthController {
   @HttpCode(201)
   @Post("refresh")
   async refresh(@Headers("authorization") jwt: string) {
-    const [, token] = jwt.split(" ");
-    const newToken = this.authService.refreshToken(token);
+    const newToken = await this.authService.refreshToken(jwt);
     return { token: newToken };
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../constants";
 import { JwtPayload } from "./auth.service";
@@ -24,16 +24,20 @@ export class JWTService {
     });
   }
 
-  checkTokenExpiry(jwt: string): JwtPayload {
-    const [, token] = jwt.split(" ");
-    const payload = this.jwtService.verify<JwtPayload>(token, {
-      secret: jwtConstants.secret
-    });
-    return payload;
+  checkTokenExpiry(token: string): JwtPayload {
+    try {
+      const payload = this.jwtService.verify<JwtPayload>(token, {
+        secret: jwtConstants.secret
+      });
+      return payload;
+    } catch (_) {
+      throw new HttpException("jwt expired", HttpStatus.FORBIDDEN);
+    }
   }
 
   decodeToken<T>(jwt: string): T {
-    const payload = this.jwtService.decode(jwt) as T
-    return payload
+    const [, token] = jwt.split(" ");
+    const payload = this.jwtService.decode(token) as T;
+    return payload;
   }
 }

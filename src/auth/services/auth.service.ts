@@ -54,7 +54,6 @@ export class AuthService {
   async refreshToken(jwt: string) {
     const { _id, email } = this.jwtService.decodeToken<JwtPayload>(jwt);
     const payload = this.jwtService.generateLongToken(email, _id);
-    console.log(payload);
     return payload;
   }
 
