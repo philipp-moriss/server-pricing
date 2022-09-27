@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import {MongoExceptionFilter, ValidationExceptionFilter} from "./exeptionsFilters/exeption-filter";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3001;
@@ -11,9 +12,20 @@ async function bootstrap() {
     origin: '*',
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('ponyWeb backend 0.6')
+    .setDescription('Root api url: /api')
+    .setVersion('0.6')
+    .addTag('ponyWeb')
+    .build()
+
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api/docs', app, document)
+
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ValidationExceptionFilter(), new MongoExceptionFilter())
   app.setGlobalPrefix('api');
+
   await app.listen(PORT, () => {
     console.log('Server has started on port ' + PORT);
   });

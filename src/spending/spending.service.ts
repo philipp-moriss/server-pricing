@@ -4,13 +4,11 @@ import {AddSpendingDto, DeleteSpendingDto, GetSpendingDto, UpdateSpendingDto} fr
 import {WalletService} from "../wallet/wallet.service";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
-import {UsersService} from "../user/users.service";
 
 @Injectable()
 export class SpendingService {
 
     constructor(
-        private usersService: UsersService,
         private walletService: WalletService,
         @InjectModel(SpendingModel.name) private spendingModel: Model<SpendingModel>
     ) {
@@ -58,6 +56,7 @@ export class SpendingService {
             return null
         }
         currentWallet.history.push(newSpending)
+        currentWallet.balance = currentWallet.balance - newSpending.amount
         const newWallet = await this.walletService.updateWallet({walletId, userId, wallet: currentWallet})
         if (!newWallet) {
             return null
