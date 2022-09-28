@@ -11,7 +11,6 @@ import { UserModel, UserModelSchema } from "../user/user.model";
     imports: [
         MongooseModule.forFeature([
             {name: WalletModel.name, schema: WalletModelSchema},
-            {name: UserModel.name, schema: UserModelSchema},
         ])
     ],
     exports: [WalletService],

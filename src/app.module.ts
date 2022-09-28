@@ -8,6 +8,8 @@ import { AuthModule } from "./auth/auth.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { getMongoConfig } from "./configs/mongo.config";
+import { HistoryController } from './history/history.controller';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -21,8 +23,9 @@ import { getMongoConfig } from "./configs/mongo.config";
     AuthModule,
     SpendingModule,
     UserModule,
+    HistoryModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HistoryController],
   providers: [AppService]
 })
 export class AppModule {

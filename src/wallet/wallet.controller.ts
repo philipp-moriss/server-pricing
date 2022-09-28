@@ -1,7 +1,7 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query,} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Query,} from '@nestjs/common';
 import {WalletService} from './wallet.service';
 import {WalletModel} from './wallet.model';
-import {addWalletDto, deleteWalletDto, getAllWalletsDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
+import {addWalletDto, getAllWalletsDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
 
 @Controller('wallet')
 export class WalletController {
@@ -45,14 +45,5 @@ export class WalletController {
             throw new HttpException('userId or walletId not Found', HttpStatus.NOT_FOUND);
         }
         return updateWallet
-    }
-
-    @Delete()
-    async deleteWallet(@Body() {walletId, userId}: deleteWalletDto): Promise<WalletModel> {
-        const wallet = await this.walletService.deleteWallet(walletId, userId);
-        if (!wallet) {
-            throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
-        }
-        return wallet;
     }
 }
