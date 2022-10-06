@@ -70,17 +70,24 @@ export class HistoryController {
     }
 
     @Post('spending')
-    async addSpending(@Body() dto : AddSpendingDto) : Promise<SpendingModel | null> {
-        const spending = await this.spendingService.addSpending(dto)
-        if (!spending) {
-            throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
-        }
-        const currentWallet = await this.walletService.getWallet(dto.walletId, dto.userId)
+    async addSpending(@Body() {spending : spendingDto, userId, walletId} : AddSpendingDto) : Promise<SpendingModel | null> {
+        const currentWallet = await this.walletService.getWallet(walletId, userId)
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
+
+        const walletCurrency = currentWallet.currency;
+        const spending = await this.spendingService.addSpending({
+            userId,
+            walletId,
+            spending: {...spendingDto, currency : walletCurrency}
+        })
+        if (!spending) {
+            throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
+        }
+
         const currentBalance = currentWallet.balance - spending.amount
-        const balance = await this.walletService.updateBalanceWallet({walletId: dto.walletId, balance: currentBalance})
+        const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance})
         if (!balance) {
             throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
         }

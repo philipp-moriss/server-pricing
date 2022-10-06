@@ -41,6 +41,12 @@ export class SpendingModel extends Document{
   amount: number;
 
   @Prop({
+    type: () => String,
+    nullable: false,
+  })
+  currency: string;
+
+  @Prop({
     type: () => Date,
     nullable: false,
   })

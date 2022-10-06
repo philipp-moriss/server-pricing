@@ -12,6 +12,15 @@ export class ICategory {
   value: string;
 }
 
+export class ICurrency {
+  _id: string;
+  @Prop({
+    lowercase: true,
+    trim: true,
+  })
+  value: string;
+}
+
 
 @Schema({ timestamps: true, validateBeforeSave: true })
 export class WalletModel extends Document{
@@ -38,6 +47,27 @@ export class WalletModel extends Document{
     required: true,
   })
   currency: string;
+
+
+  @Prop({
+    type: () => [ICategory],
+    nullable: true,
+    default: [
+      {
+        _id: new Types.ObjectId(),
+        value: "USD"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "EUR"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "BY"
+      },
+    ],
+  })
+  castCurrency: Array<ICurrency>
 
   @Prop({ nullable: true })
   totalSpends: number;
