@@ -12,6 +12,7 @@ export class Spending {
     category: string;
     @IsNotEmpty()
     amount: number;
+    currency: string;
 }
 
 export class GetSpendingDto {

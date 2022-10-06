@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {WalletModel} from './wallet.model';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
-import {updateWalletDto, Wallet} from "./dto/wallet.dto";
+import {updateWalletBalanceDto, updateWalletDto, Wallet} from "./dto/wallet.dto";
 
 @Injectable()
 export class WalletService {
@@ -48,10 +48,26 @@ export class WalletService {
         return this.walletModel.findByIdAndDelete({_id: currentWallet._id});
     }
 
+    async deleteWallets(userId: string): Promise<{ deletedCount: number; } | null> {
+       return this.walletModel.deleteMany({userId: userId});
+    }
+
     async updateWallet({
                            walletId,
                            wallet
                        }: updateWalletDto): Promise<WalletModel | null> {
         return this.walletModel.findByIdAndUpdate({_id: walletId}, wallet, {overwrite: false, new: true});
+    }
+
+    async updateBalanceWallet({
+                                  walletId,
+                                  balance
+                              }: updateWalletBalanceDto) {
+        const wallet = await this.walletModel.findById({_id: walletId});
+        if (!wallet) {
+            return null
+        }
+        wallet.balance = balance
+        return  wallet.save()
     }
 }

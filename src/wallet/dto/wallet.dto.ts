@@ -57,12 +57,19 @@ export class updateWalletDto {
   @Type(() => Types.ObjectId)
   @IsNotEmpty()
   @Transform(toMongoObjectId)
-  userId: string;
+  walletId: string;
+  wallet : Wallet;
+}
+
+
+export class updateWalletBalanceDto {
   @Type(() => Types.ObjectId)
   @IsNotEmpty()
   @Transform(toMongoObjectId)
   walletId: string;
-  wallet : Wallet;
+
+  @Type(() => Number)
+  balance: number;
 }
 
 

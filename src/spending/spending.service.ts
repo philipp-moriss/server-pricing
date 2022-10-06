@@ -1,7 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {SpendingModel} from "./spending.model";
 import {AddSpendingDto, DeleteSpendingDto, GetSpendingDto, UpdateSpendingDto} from "./dto/spending.dto";
-import {WalletService} from "../wallet/wallet.service";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
@@ -9,76 +8,52 @@ import {Model} from "mongoose";
 export class SpendingService {
 
     constructor(
-        private walletService: WalletService,
         @InjectModel(SpendingModel.name) private spendingModel: Model<SpendingModel>
     ) {
     }
 
     async getSpending({spendingId, walletId, userId}: GetSpendingDto): Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
-        if (!currentWallet) {
-            return null
-        }
-        const currentSpending = currentWallet.history.find((spending) => String(spending._id) === spendingId)
-        if (!currentSpending) {
-            return null
-        }
-        const spending = await this.spendingModel.findById({_id: spendingId})
-        return spending
+        return this.spendingModel.findById({_id: spendingId, walletId, userId})
+    }
+
+    async getSpendingByWalletId({walletId} : Pick<GetSpendingDto, 'walletId'>) : Promise<SpendingModel[] | null> {
+        return this.spendingModel.find({walletId})
+    }
+
+    async getSpendingByUserId({userId} : Pick<GetSpendingDto, 'userId'>) : Promise<SpendingModel[] | null> {
+        return this.spendingModel.find({userId})
+    }
+
+    async deleteSpendingByWalletId({walletId} : Pick<GetSpendingDto, 'walletId'>) : Promise<{deletedCount: number} | null> {
+        return this.spendingModel.deleteMany({walletId})
+    }
+
+    async deleteSpendingByUserId({userId} : Pick<GetSpendingDto, 'userId'>) : Promise<{deletedCount: number} | null> {
+        return this.spendingModel.deleteMany({userId})
     }
 
     async updateSpending({spending, userId, walletId}: UpdateSpendingDto): Promise<SpendingModel | null> {
-        const currentSpending = await this.getSpending({spendingId: spending._id, userId, walletId})
-        if (!currentSpending) {
-            return null
-        }
-        const newSpending = await this.spendingModel.findByIdAndUpdate({_id: spending._id}, spending, {new : true, overwrite: false});
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
-        currentWallet.history = currentWallet.history.map((spending) => {
-            if (spending._id.toString() === newSpending._id.toString()) {
-                return newSpending
-            }else return spending
-        })
-        const isSave = await currentWallet.save()
-        if (!isSave) {
-            return null
-        }
-        return newSpending
+        return this.spendingModel.findOneAndUpdate(
+            {
+                _id: spending._id,
+                userId,
+                walletId
+            }
+            ,
+            spending
+            ,
+            {
+                new: true,
+                overwrite: false
+            }
+        );
     }
 
     async addSpending({walletId, userId, spending}: AddSpendingDto): Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
-        if (!currentWallet) {
-            return null
-        }
-        const newSpending = await this.spendingModel.create({...spending})
-        if (!newSpending) {
-            return null
-        }
-        currentWallet.history.push(newSpending)
-        currentWallet.balance = currentWallet.balance - newSpending.amount
-        const newWallet = await this.walletService.updateWallet({walletId, userId, wallet: currentWallet})
-        if (!newWallet) {
-            return null
-        }
-        return newSpending
+        return await this.spendingModel.create({...spending, userId, walletId})
     }
 
     async deleteSpending({walletId, userId, spendingId}: DeleteSpendingDto): Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
-        if (!currentWallet) {
-            return null
-        }
-        const currentSpending = currentWallet.history.find((spending) => String(spending._id) === spendingId)
-        if (!currentSpending) {
-            return null
-        }
-        currentWallet.history = currentWallet.history.filter((spending) => String(spending._id) !== spendingId)
-        const newWallet = await this.walletService.updateWallet({walletId, userId, wallet: currentWallet})
-        const deleteSpending = await this.spendingModel.findByIdAndDelete({_id: spendingId})
-        if (!newWallet) {
-            return null
-        }
-        return deleteSpending
+        return this.spendingModel.findOneAndDelete({_id: spendingId, walletId, userId});
     }
 }

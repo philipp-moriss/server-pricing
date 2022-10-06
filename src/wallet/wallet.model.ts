@@ -1,9 +1,18 @@
-import {SpendingModel} from '../spending/spending.model';
+// import {SpendingModel} from '../spending/spending.model';
 import {Document, Types} from 'mongoose';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
 
 export class ICategory {
+  _id: string;
+  @Prop({
+    lowercase: true,
+    trim: true,
+  })
+  value: string;
+}
+
+export class ICurrency {
   _id: string;
   @Prop({
     lowercase: true,
@@ -38,6 +47,27 @@ export class WalletModel extends Document{
     required: true,
   })
   currency: string;
+
+
+  @Prop({
+    type: () => [ICategory],
+    nullable: true,
+    default: [
+      {
+        _id: new Types.ObjectId(),
+        value: "USD"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "EUR"
+      },
+      {
+        _id: new Types.ObjectId(),
+        value: "BY"
+      },
+    ],
+  })
+  castCurrency: Array<ICurrency>
 
   @Prop({ nullable: true })
   totalSpends: number;
@@ -81,12 +111,6 @@ export class WalletModel extends Document{
     ],
   })
   myCategories: Array<ICategory>;
-
-  @Prop({
-    type: () => [SpendingModel],
-    nullable: true,
-    default : []})
-  history: Array<SpendingModel> | null;
 }
 
 
