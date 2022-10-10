@@ -51,6 +51,17 @@ export class AuthService {
     return tokenInstance;
   }
 
+  async testLoginWithShortToken(dto: RequestUserDto): Promise<AuthTokenModel | null> {
+    const isUserValid = await this.validateUser(dto);
+    if (!isUserValid) {
+      return null;
+    }
+    const { _id, email } = await this.usersService.getUser(dto.email);
+    const token = this.jwtService.generateOneSecondToken(email, _id);
+    const tokenInstance = await this.authModelService.updateToken({ _id, token });
+    return tokenInstance;
+  }
+
   async refreshToken(jwt: string) {
     const { _id, email } = this.jwtService.decodeToken<JwtPayload>(jwt);
     const payload = this.jwtService.generateLongToken(email, _id);

@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, Headers, Param, UseGuards } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UserModel } from "./user.model";
 import { JWTService } from "../auth/services/jwt.service";
@@ -13,11 +13,17 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get("/user")
-  getUserById(@Headers("authorization") token: string): Promise<UserModel | null> {
+  async getUserById(@Headers("authorization") token: string): Promise<UserModel | null> {
     const jwtPayload = this.jwtService.decodeToken<JwtPayload>(token);
     if (jwtPayload) {
       const { _id } = jwtPayload;
       return this.usersService.getUserById(_id);
     }
+  }
+
+  @Delete("/delete-test/:id")
+  async deleteTestUser(@Param("id") id: string) {
+    const removedId = await this.usersService.deleteTestUser(id);
+    return { id: removedId };
   }
 }

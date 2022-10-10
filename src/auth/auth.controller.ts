@@ -42,6 +42,19 @@ export class AuthController {
     return user;
   }
 
+  @HttpCode(201)
+  @Post("test-short-login")
+  async testLoginWithShortExpiryToken(@Body() dto: RequestUserDto) {
+    if (!dto.email || !dto.password) {
+      throw new HttpException("Login data was not provided", 401);
+    }
+    const user = await this.authService.testLoginWithShortToken(dto);
+    if (!user) {
+      throw new HttpException("Wrong email or password", 401);
+    }
+    return user;
+  }
+
   @ApiOperation({ summary: "Current user logging out" })
   @ApiResponse({ status: 201 })
   @Post("logout")

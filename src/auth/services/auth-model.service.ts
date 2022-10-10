@@ -15,8 +15,8 @@ export class AuthModelService {
   }
 
   async createTokenModel(dto: LoginResponseDto) {
-    const newToken = new this.authTokenModel(dto);
-    return newToken.save();
+    const newToken = await this.authTokenModel.create(dto);
+    return newToken;
   }
 
   async updateToken(dto: LoginResponseDto) {
@@ -34,6 +34,7 @@ export class AuthModelService {
   }
 
   async deleteTokenModel(_id: string) {
-    await this.authTokenModel.deleteOne({ _id });
+    const res = await this.authTokenModel.findByIdAndDelete({ _id });
+    return res
   }
 }

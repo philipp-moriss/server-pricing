@@ -1,17 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserModel, UserModelType } from "./user.model";
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { CreateAuthDto } from "../auth/dto/create-auth.dto";
 import * as bcrypt from "bcrypt";
-import { UserPassModel, UserPassModelType } from "../auth/models/user-pass.model";
 import { UserPassService } from "../auth/services/user-pass.service";
+import { AuthModelService } from "../auth/services/auth-model.service";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserModel.name) private userModel: Model<UserModelType>,
-    private userPassService: UserPassService
+    private userPassService: UserPassService,
+    private authModelService: AuthModelService
   ) {
   }
 
@@ -45,5 +46,16 @@ export class UsersService {
   async getUserById(_id: string): Promise<UserModel | null> {
     const user = await this.userModel.findById(_id);
     return user || null;
+  }
+
+  async deleteTestUser(_id: string) {
+    const { _id: removedUserId } = await this.userModel.findByIdAndDelete(_id);
+    const { _id: removedPassId } = await this.userPassService.delete(_id);
+    const { _id: removedAuthModelId } = await this.authModelService.deleteTokenModel(_id);
+    if (removedUserId.toString() === removedPassId.toString()) {
+      if (removedUserId.toString() === removedAuthModelId.toString()) {
+        return removedPassId;
+      }
+    }
   }
 }

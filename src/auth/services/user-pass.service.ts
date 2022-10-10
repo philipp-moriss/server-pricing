@@ -9,7 +9,7 @@ export class UserPassService {
   constructor(@InjectModel(UserPassModel.name) private userPassModel: Model<UserPassModelType>) {
   }
 
-  async get(_id) {
+  async get(_id: string) {
     const res = await this.userPassModel.findById(_id);
     return res;
   }
@@ -25,7 +25,8 @@ export class UserPassService {
     return res;
   }
 
-  async delete(_id) {
-    await this.userPassModel.findByIdAndDelete(_id);
+  async delete(_id: string) {
+    const res = await this.userPassModel.findByIdAndDelete(_id);
+    return res;
   }
 }

@@ -1,11 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  HttpException,
-  Injectable,
-  UnauthorizedException
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { JWTService } from "../auth/services/jwt.service";
 
@@ -19,6 +12,9 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     try {
       const req = context.switchToHttp().getRequest();
+      if (!req.headers.authorization) {
+        throw new UnauthorizedException("You are not authorized");
+      }
       const [bearer, token] = req.headers.authorization.split(" ", 2);
       if (bearer !== "Bearer" || !token) {
         throw new UnauthorizedException("You are not authorized");

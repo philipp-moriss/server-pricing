@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../constants";
 import { JwtPayload } from "./auth.service";
@@ -10,15 +10,22 @@ export class JWTService {
   ) {
   }
 
+  generateOneSecondToken(email: string, _id: string) {
+    return this.jwtService.sign({ _id, email }, {
+      secret: jwtConstants.secret,
+      expiresIn: "1s"
+    });
+  }
+
   generateShortToken(email: string, _id: string) {
-    return this.jwtService.sign({ email, _id }, {
+    return this.jwtService.sign({ _id, email }, {
       secret: jwtConstants.secret,
       expiresIn: "15m"
     });
   }
 
   generateLongToken(email: string, _id: string) {
-    return this.jwtService.sign({ email, _id }, {
+    return this.jwtService.sign({ _id, email }, {
       secret: jwtConstants.secret,
       expiresIn: "24h"
     });
