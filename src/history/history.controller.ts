@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {WalletService} from "../wallet/wallet.service";
 import {SpendingService} from "../spending/spending.service";
 import {SpendingModel} from "../spending/spending.model";
@@ -6,8 +6,12 @@ import {SpendingByUserIdDto, SpendingByWalletIdDto} from "./dto/history.dto";
 import {deleteWalletDto} from "../wallet/dto/wallet.dto";
 import {WalletModel} from "../wallet/wallet.model";
 import {AddSpendingDto, UpdateSpendingDto} from "../spending/dto/spending.dto";
+import {AuthGuard} from "../guards/auth.guard";
+
+
 
 @Controller('history')
+@UseGuards(AuthGuard)
 export class HistoryController {
 
     constructor(

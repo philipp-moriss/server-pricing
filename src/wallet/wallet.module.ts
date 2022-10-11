@@ -3,7 +3,6 @@ import { WalletController } from "./wallet.controller";
 import { WalletService } from "./wallet.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { WalletModel, WalletModelSchema } from "./wallet.model";
-import { UserModel, UserModelSchema } from "../user/user.model";
 
 @Module({
     controllers: [WalletController],

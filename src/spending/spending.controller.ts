@@ -1,9 +1,14 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {SpendingModel} from "./spending.model";
 import {SpendingService} from "./spending.service";
 import {DeleteSpendingDto, GetSpendingDto} from "./dto/spending.dto";
+import {AuthGuard} from "../guards/auth.guard";
+
+
+
 
 @Controller('spending')
+@UseGuards(AuthGuard)
 export class SpendingController {
 
     constructor(private spendingService : SpendingService) {}

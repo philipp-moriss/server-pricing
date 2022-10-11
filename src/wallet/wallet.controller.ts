@@ -1,10 +1,15 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Query,} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Query, UseGuards,} from '@nestjs/common';
 import { Types } from 'mongoose';
 import {WalletService} from './wallet.service';
 import {WalletModel} from './wallet.model';
 import {addWalletDto, getAllWalletsDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
+import {AuthGuard} from "../guards/auth.guard";
+
+
+
 
 @Controller('wallet')
+@UseGuards(AuthGuard)
 export class WalletController {
     constructor(private walletService: WalletService) {
     }
@@ -58,7 +63,7 @@ export class WalletController {
     }
 
     @Put()
-    async updateWallet(@Body() dto: updateWalletDto): Promise<WalletModel | null> {
+       async updateWallet(@Body() dto: updateWalletDto): Promise<WalletModel | null> {
         const updateWallet = await this.walletService.updateWallet(dto)
         if (!updateWallet) {
             throw new HttpException('userId or walletId not Found', HttpStatus.NOT_FOUND);
