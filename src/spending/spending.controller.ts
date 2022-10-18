@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Req, Query, UseGuards} from '@nestjs/common';
 import {SpendingModel} from "./spending.model";
 import {SpendingService} from "./spending.service";
 import {DeleteSpendingDto, GetSpendingDto} from "./dto/spending.dto";
 import {AuthGuard} from "../guards/auth.guard";
+import {Request} from 'express'
 
 
 
@@ -14,7 +15,7 @@ export class SpendingController {
     constructor(private spendingService : SpendingService) {}
 
     @Get()
-    async getSpending(@Query() dto : GetSpendingDto) : Promise<SpendingModel | null> {
+    async getSpending(@Query() dto : GetSpendingDto, @Req() req : Request) : Promise<SpendingModel | null> {
         const spending = await this.spendingService.getSpending(dto)
         if (!spending) {
             throw new HttpException('spending not found', HttpStatus.BAD_REQUEST);
