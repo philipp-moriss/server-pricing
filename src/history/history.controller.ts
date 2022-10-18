@@ -1,12 +1,25 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpException,
+    HttpStatus,
+    Post,
+    Put,
+    Query,
+    Req,
+    UseGuards
+} from '@nestjs/common';
 import {WalletService} from "../wallet/wallet.service";
 import {SpendingService} from "../spending/spending.service";
 import {SpendingModel} from "../spending/spending.model";
-import {SpendingByUserIdDto, SpendingByWalletIdDto} from "./dto/history.dto";
+import {SpendingByUserIdDto, SpendingByWalletIdDto, UpdateSpendingDto} from "./dto/history.dto";
 import {deleteWalletDto} from "../wallet/dto/wallet.dto";
 import {WalletModel} from "../wallet/wallet.model";
-import {AddSpendingDto, UpdateSpendingDto} from "../spending/dto/spending.dto";
+import {AddSpendingDto} from "../spending/dto/spending.dto";
 import {AuthGuard} from "../guards/auth.guard";
+import {Request} from "express";
 
 
 
@@ -31,7 +44,8 @@ export class HistoryController {
     }
 
     @Get('allUserHistory')
-    async getHistoryWalletByUserId(@Query() {userId}: SpendingByUserIdDto): Promise<SpendingModel[] | null> {
+    async getHistoryWalletByUserId(@Req() req : Request): Promise<SpendingModel[] | null> {
+        const userId = req.user._id
         const history = await this.spendingService.getSpendingByUserId({userId});
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
@@ -41,7 +55,8 @@ export class HistoryController {
 
 
     @Put('spending')
-    async updateSpending(@Body() dto : UpdateSpendingDto): Promise<SpendingModel | null>  {
+    async updateSpending(@Body() {spending, walletId} : UpdateSpendingDto, @Req() req : Request): Promise<SpendingModel | null>  {
+        const dto = {spending, walletId, userId : req.user._id }
         const currentSpending = await this.spendingService.getSpending({
             spendingId : dto.spending._id,
             userId : dto.userId,
@@ -74,15 +89,15 @@ export class HistoryController {
     }
 
     @Post('spending')
-    async addSpending(@Body() {spending : spendingDto, userId, walletId} : AddSpendingDto) : Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
+    async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @Req() req : Request) : Promise<SpendingModel | null> {
+        const currentWallet = await this.walletService.getWallet(walletId, req.user._id)
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
 
         const walletCurrency = currentWallet.currency;
         const spending = await this.spendingService.addSpending({
-            userId,
+            userId: req.user._id,
             walletId,
             spending: {...spendingDto, currency : walletCurrency}
         })
@@ -117,8 +132,8 @@ export class HistoryController {
     }
 
     @Delete('wallet')
-    async deleteWallet(@Body() {walletId, userId}: deleteWalletDto): Promise<WalletModel> {
-        const wallet = await this.walletService.deleteWallet(walletId, userId);
+    async deleteWallet(@Body() {walletId}: deleteWalletDto, @Req() req : Request): Promise<WalletModel> {
+        const wallet = await this.walletService.deleteWallet(walletId, req.user._id);
         if (!wallet) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
@@ -131,7 +146,8 @@ export class HistoryController {
 
 
     @Delete('wallets')
-    async deleteWallets(@Body() {userId}: deleteWalletDto): Promise<{ deletedCount: number; }> {
+    async deleteWallets(@Req() req : Request): Promise<{ deletedCount: number; }> {
+        const userId = req.user._id
         const deletedCount = await this.walletService.deleteWallets(userId);
         if (!deletedCount) {
             throw new HttpException('wallets not delete', HttpStatus.NOT_FOUND);
