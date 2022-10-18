@@ -5,6 +5,7 @@ import {WalletModel} from './wallet.model';
 import {addWalletDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
 import {AuthGuard} from "../guards/auth.guard";
 import {Request} from 'express'
+import {User} from "../decarators/user.decarator";
 
 
 
@@ -16,8 +17,8 @@ export class WalletController {
     }
 
     @Get()
-    async getWallet(@Query() {walletId}: getWalletDto, @Req() req : Request): Promise<WalletModel> {
-        const wallet = await this.walletService.getWallet(walletId, req.user._id);
+    async getWallet(@Query() {walletId}: getWalletDto, @User('_id') user : string): Promise<WalletModel> {
+        const wallet = await this.walletService.getWallet(walletId, user);
         if (!wallet) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
@@ -26,9 +27,9 @@ export class WalletController {
 
     @Get('wallets')
     async getAllWallets(
-        @Req() req : Request
+        @User('_id') user : string
     ): Promise<Array<WalletModel> | null> {
-        const wallets = await this.walletService.getAllWallets(req.user._id)
+        const wallets = await this.walletService.getAllWallets(user)
         if (!wallets) {
             throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
         }
