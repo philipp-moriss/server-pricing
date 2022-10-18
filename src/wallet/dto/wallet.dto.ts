@@ -1,7 +1,7 @@
 import {Transform, Type} from "class-transformer";
 import {Types} from "mongoose";
 import {toMongoObjectId} from "../../dtoHandlers/userIdHandler";
-import {IsNotEmpty} from "class-validator";
+import {IsEmail, IsNotEmpty} from "class-validator";
 
 export class Wallet {
   @IsNotEmpty()

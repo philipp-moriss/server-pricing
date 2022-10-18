@@ -20,6 +20,7 @@ import {WalletModel} from "../wallet/wallet.model";
 import {AddSpendingDto} from "../spending/dto/spending.dto";
 import {AuthGuard} from "../guards/auth.guard";
 import {Request} from "express";
+import {User} from "../decarators/user.decarator";
 
 
 
@@ -44,8 +45,7 @@ export class HistoryController {
     }
 
     @Get('allUserHistory')
-    async getHistoryWalletByUserId(@Req() req : Request): Promise<SpendingModel[] | null> {
-        const userId = req.user._id
+    async getHistoryWalletByUserId(@User('_id') userId : string): Promise<SpendingModel[] | null> {
         const history = await this.spendingService.getSpendingByUserId({userId});
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
@@ -55,8 +55,8 @@ export class HistoryController {
 
 
     @Put('spending')
-    async updateSpending(@Body() {spending, walletId} : UpdateSpendingDto, @Req() req : Request): Promise<SpendingModel | null>  {
-        const dto = {spending, walletId, userId : req.user._id }
+    async updateSpending(@Body() {spending, walletId} : UpdateSpendingDto,@User('_id') userId : string): Promise<SpendingModel | null>  {
+        const dto = {spending, walletId, userId}
         const currentSpending = await this.spendingService.getSpending({
             spendingId : dto.spending._id,
             userId : dto.userId,
@@ -89,15 +89,15 @@ export class HistoryController {
     }
 
     @Post('spending')
-    async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @Req() req : Request) : Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, req.user._id)
+    async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @User('_id') userId : string) : Promise<SpendingModel | null> {
+        const currentWallet = await this.walletService.getWallet(walletId, userId)
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
 
         const walletCurrency = currentWallet.currency;
         const spending = await this.spendingService.addSpending({
-            userId: req.user._id,
+            userId,
             walletId,
             spending: {...spendingDto, currency : walletCurrency}
         })
@@ -123,7 +123,7 @@ export class HistoryController {
     }
 
     @Delete('allUserHistory')
-    async deleteHistoryWalletByUserId(@Body() {userId}: SpendingByUserIdDto): Promise<{ deletedCount: number; } | null> {
+    async deleteHistoryWalletByUserId(@User('_id') userId : string): Promise<{ deletedCount: number; } | null> {
         const deleteCount = await this.spendingService.deleteSpendingByUserId({userId});
         if (!deleteCount) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
@@ -132,8 +132,8 @@ export class HistoryController {
     }
 
     @Delete('wallet')
-    async deleteWallet(@Body() {walletId}: deleteWalletDto, @Req() req : Request): Promise<WalletModel> {
-        const wallet = await this.walletService.deleteWallet(walletId, req.user._id);
+    async deleteWallet(@Body() {walletId}: deleteWalletDto, @User('_id') userId : string): Promise<WalletModel> {
+        const wallet = await this.walletService.deleteWallet(walletId, userId);
         if (!wallet) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
@@ -146,8 +146,7 @@ export class HistoryController {
 
 
     @Delete('wallets')
-    async deleteWallets(@Req() req : Request): Promise<{ deletedCount: number; }> {
-        const userId = req.user._id
+    async deleteWallets(@User('_id') userId : string): Promise<{ deletedCount: number; }> {
         const deletedCount = await this.walletService.deleteWallets(userId);
         if (!deletedCount) {
             throw new HttpException('wallets not delete', HttpStatus.NOT_FOUND);

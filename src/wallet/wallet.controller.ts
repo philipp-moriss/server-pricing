@@ -17,8 +17,8 @@ export class WalletController {
     }
 
     @Get()
-    async getWallet(@Query() {walletId}: getWalletDto, @User('_id') user : string): Promise<WalletModel> {
-        const wallet = await this.walletService.getWallet(walletId, user);
+    async getWallet(@Query() {walletId}: getWalletDto, @User('_id') userId : string): Promise<WalletModel> {
+        const wallet = await this.walletService.getWallet(walletId, userId);
         if (!wallet) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
@@ -27,9 +27,9 @@ export class WalletController {
 
     @Get('wallets')
     async getAllWallets(
-        @User('_id') user : string
+        @User('_id') userId : string
     ): Promise<Array<WalletModel> | null> {
-        const wallets = await this.walletService.getAllWallets(user)
+        const wallets = await this.walletService.getAllWallets(userId)
         if (!wallets) {
             throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
         }
@@ -55,9 +55,9 @@ export class WalletController {
   }
 
     @Post()
-    async addWallet(@Body() dto: addWalletDto, @Req() req : Request): Promise<WalletModel | null> {
+    async addWallet(@Body() dto: addWalletDto, @User('_id') userId : string): Promise<WalletModel | null> {
         const {wallet} = dto
-        const result = await this.walletService.addWallet(req.user._id, wallet)
+        const result = await this.walletService.addWallet(userId, wallet)
         if (!result) {
             throw new HttpException('userId not Found', HttpStatus.NOT_FOUND);
         }
