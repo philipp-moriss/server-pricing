@@ -12,6 +12,11 @@ import { HistoryController } from './history/history.controller';
 import { HistoryModule } from './history/history.module';
 import {JWTService} from "./auth/services/jwt.service";
 import {JwtModule} from "@nestjs/jwt";
+import { ChartController } from './chart/chart.controller';
+import { ChartModule } from './chart/chart.module';
+import {WalletController} from "./wallet/wallet.controller";
+import {SpendingController} from "./spending/spending.controller";
+import {ChartService} from "./chart/chart.service";
 
 @Global()
 @Module({
@@ -28,8 +33,16 @@ import {JwtModule} from "@nestjs/jwt";
     SpendingModule,
     UserModule,
     HistoryModule,
+    ChartModule,
   ],
-  controllers: [AppController, HistoryController],
+  controllers: [
+      AppController,
+      HistoryController,
+      ChartController,
+      WalletController,
+      SpendingController,
+      ChartController
+  ],
   providers: [AppService, JWTService],
   exports: [JwtModule, JWTService],
 })

@@ -25,6 +25,7 @@ export class Spending {
     category: string;
     @IsNotEmpty()
     amount: number;
+    walletName: string;
     currency: string;
 }
 

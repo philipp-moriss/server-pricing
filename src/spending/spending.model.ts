@@ -12,7 +12,11 @@ export class SpendingModel extends Document{
   })
   title: string;
 
-
+  @Prop({
+    type: () => String,
+    nullable: true,
+  })
+  walletName: string;
 
   @Prop({
     required: true,
@@ -55,6 +59,12 @@ export class SpendingModel extends Document{
     nullable: false,
   })
   date: Date;
+
+  @Prop({
+    type: () => Date,
+    nullable: false,
+  })
+  createdAt: Date;
 }
 
 

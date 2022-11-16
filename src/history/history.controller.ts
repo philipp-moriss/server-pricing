@@ -96,10 +96,11 @@ export class HistoryController {
         }
 
         const walletCurrency = currentWallet.currency;
+        const walletName = currentWallet.name
         const spending = await this.spendingService.addSpending({
             userId,
             walletId,
-            spending: {...spendingDto, currency : walletCurrency}
+            spending: {...spendingDto, currency : walletCurrency, walletName: walletName}
         })
         if (!spending) {
             throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);

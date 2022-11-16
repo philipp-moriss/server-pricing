@@ -29,6 +29,12 @@ export class SpendingService {
         return this.spendingModel.find({userId})
     }
 
+    async getSpendingByParameters(params) : Promise<SpendingModel[] | null> {
+        return this.spendingModel.find({
+            ...params
+        })
+    }
+
     async deleteSpendingByWalletId({walletId} : WalletId) : Promise<{deletedCount: number} | null> {
         return this.spendingModel.deleteMany({walletId})
     }
