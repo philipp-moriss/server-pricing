@@ -32,14 +32,16 @@ export class SpendingModel extends Document{
   @Prop({
     type: () => String,
     nullable: true,
-    required: true,
+    required: false,
   })
   description: string;
+
   @Prop({
     type: () => String,
     required: true,
   })
   category: string;
+
   @Prop({
     type: () => Number,
     nullable: false,
