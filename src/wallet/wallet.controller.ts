@@ -4,7 +4,6 @@ import {WalletService} from './wallet.service';
 import {WalletModel} from './wallet.model';
 import {addWalletDto, getWalletDto, updateWalletDto} from './dto/wallet.dto';
 import {AuthGuard} from "../guards/auth.guard";
-import {Request} from 'express'
 import {User} from "../decarators/user.decarator";
 
 
