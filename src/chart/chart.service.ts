@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {SpendingModel} from "../spending/spending.model";
 
 
-
 type DatasetData = {
     x : string,
     y : string,
