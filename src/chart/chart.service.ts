@@ -41,7 +41,7 @@ export class ChartService {
                 data.push({ x: dataKey, y: transformToChartData[transformToChartDataKey][dataKey] });
             }
             const splitKey = transformToChartDataKey.split('//')
-            const label = `category name : ${splitKey[0]}, wallet name: ${splitKey[1]}, currency: "${splitKey[2]}"`
+            const label = `Category: ${splitKey[0]}, "${splitKey[2]}"`
             datasets.push({ label: label, data: data });
         }
 
