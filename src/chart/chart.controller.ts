@@ -10,11 +10,12 @@ import {getChartDataDto} from "./dto/chart.dto";
 export class ChartController {
     constructor(
         private spendingService: SpendingService,
-        private chartService : ChartService,
-        ) {}
+        private chartService: ChartService,
+    ) {
+    }
 
     @Get('/getChartData')
-    async getChartData(@User('_id') userId : string, @Query() queryParams : getChartDataDto): Promise<ChartDataset[] | null> {
+    async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto): Promise<ChartDataset[] | null> {
 
         const currentYear = Number(queryParams.year ?? new Date().getFullYear())
 
@@ -23,9 +24,9 @@ export class ChartController {
                 $gte: new Date(currentYear, 1, 1),
                 $lt: new Date(currentYear, 12, 31)
             },
-            userId
+            userId,
+            walletId: queryParams.walletId
         }
-
         const allHistory = await this.spendingService.getSpendingByParameters(paramsForSearchSpending);
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
@@ -33,6 +34,5 @@ export class ChartController {
         const dataSetForChart = await this.chartService.getChartDataset(allHistory)
         return dataSetForChart
     }
-
 
 }
