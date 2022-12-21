@@ -1,5 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {SpendingModel} from "../spending/spending.model";
+import {
+    generateColor,
+    transformToChartDataHandlerForChartLine,
+    transformToChartDataHandlerForChartPie,
+} from "../utils/utils";
 
 
 type DatasetData = {
@@ -16,6 +21,11 @@ export type ChartDatasetMobile = {
     population: number,
     color: string,
     legendFontColor: string,
+}
+export type ChartDatasetMobileLine = {
+    data: number[]
+    strokeWidth: 2,
+    key: string
 }
 
 @Injectable()
@@ -37,7 +47,6 @@ export class ChartService {
             }
             return accState;
         }, {});
-
         for (const transformToChartDataKey in transformToChartData) {
             const data = [];
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,38 +62,36 @@ export class ChartService {
         return datasets
     }
 
-    async getChartDatasetForMobile(spendingArray: SpendingModel[]): Promise<ChartDatasetMobile[]> {
-        const generateColor = () => {
-            const randomColor = Math.floor(Math.random() * 16777215)
-                .toString(16)
-                .padStart(6, '0');
-            return `#${randomColor}`;
-        };
+    async getChartDatasetForMobilePie(spendingArray: SpendingModel[]): Promise<ChartDatasetMobile[]> {
+
         const datasetsMobile = [];
-        const transformToChartData = spendingArray.reduce((accState: { [key: string]: number }, currItem) => {
-            const currCategoryKey = `${currItem.category}/${currItem.currency}`;
-            const currMonth = currItem.createdAt.toLocaleString('default', {month: 'long'});
-            if (!accState[currCategoryKey]) {
-                accState[currCategoryKey] = 0
-            }
-            if (accState[currCategoryKey]) {
-                accState[currCategoryKey] =
-                    accState[currCategoryKey] + Number(currItem.amount);
-            } else {
-                accState[currCategoryKey] = Number(currItem.amount)
-            }
-            return accState;
-        }, {});
+        const transformToChartData = transformToChartDataHandlerForChartPie(spendingArray)
 
         for (const transformToChartDataKey in transformToChartData) {
             const splitKey = transformToChartDataKey.split('/')
-            const label = `${splitKey[0]}, "${splitKey[1]}"`
             datasetsMobile.push({
-                label: label,
+                name: splitKey[0],
                 population: transformToChartData[transformToChartDataKey],
                 color: generateColor(),
-                legendFontColor: generateColor()
+                legendFontColor: 'white'
             });
+        }
+        return datasetsMobile
+    }
+
+    async getChartDatasetForMobileLine(spendingArray: SpendingModel[]): Promise<ChartDatasetMobileLine[]> {
+        const datasetsMobile: ChartDatasetMobileLine[] = [];
+        const transformToChartData = transformToChartDataHandlerForChartLine(spendingArray)
+        for (const transformToChartDataKey in transformToChartData) {
+            const data = [];
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            for (const dataKey in transformToChartData[transformToChartDataKey]) {
+                data.push(transformToChartData[transformToChartDataKey][dataKey]);
+            }
+            const splitKey = transformToChartDataKey.split('//')
+            const key = splitKey[0]
+            datasetsMobile.push({key: key, data: data, strokeWidth: 2});
         }
         return datasetsMobile
     }

@@ -1,7 +1,7 @@
 import {Controller, Get, HttpException, HttpStatus, Query, UseGuards} from '@nestjs/common';
 import {SpendingService} from "../spending/spending.service";
 import {User} from "../decarators/user.decarator";
-import {ChartDataset, ChartDatasetMobile, ChartService} from "./chart.service";
+import {ChartService} from "./chart.service";
 import {AuthGuard} from "../guards/auth.guard";
 import {getChartDataDto} from "./dto/chart.dto";
 
@@ -15,7 +15,7 @@ export class ChartController {
     }
 
     @Get('/getChartData')
-    async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto): Promise<ChartDataset[] | null> {
+    async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
 
         const currentYear = Number(queryParams.year ?? new Date().getFullYear())
 
@@ -31,28 +31,16 @@ export class ChartController {
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
-        const dataSetForChart = await this.chartService.getChartDataset(allHistory)
-        return dataSetForChart
-    }
-    @Get('/getChartDataMobile')
-    async getChartDataMobile(@User('_id') userId: string, @Query() queryParams: getChartDataDto): Promise<ChartDatasetMobile[] | null> {
-
-        const currentYear = Number(queryParams.year ?? new Date().getFullYear())
-
-        const paramsForSearchSpending = {
-            createdAt: {
-                $gte: new Date(currentYear, 1, 1),
-                $lt: new Date(currentYear, 12, 31)
-            },
-            userId,
-            walletId: queryParams.walletId
+        if (queryParams.isMobile) {
+            if (queryParams.typeChart === 'line') {
+                return await this.chartService.getChartDatasetForMobileLine(allHistory)
+            }
+            if (queryParams.typeChart === 'pie') {
+                return await this.chartService.getChartDatasetForMobilePie(allHistory)
+            }
+        } else {
+            return await this.chartService.getChartDataset(allHistory)
         }
-        const allHistory = await this.spendingService.getSpendingByParameters(paramsForSearchSpending);
-        if (!allHistory) {
-            throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
-        }
-        const dataSetForChart = await this.chartService.getChartDatasetForMobile(allHistory)
-        return dataSetForChart
     }
 
 }
