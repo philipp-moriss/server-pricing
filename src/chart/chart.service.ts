@@ -1,10 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {SpendingModel} from "../spending/spending.model";
-import {
-    generateColor,
-    transformToChartDataHandlerForChartLine,
-    transformToChartDataHandlerForChartPie,
-} from "../utils/utils";
+import {transformToChartDataHandlerForChartPie,} from "../utils/utils";
 
 
 type DatasetData = {
@@ -63,36 +59,32 @@ export class ChartService {
     }
 
     async getChartDatasetForMobilePie(spendingArray: SpendingModel[]): Promise<ChartDatasetMobile[]> {
-
         const datasetsMobile = [];
         const transformToChartData = transformToChartDataHandlerForChartPie(spendingArray)
+        for (const transformToChartDataKey in transformToChartData) { // transformToChartDataKey === category name example // Подарки
 
-        for (const transformToChartDataKey in transformToChartData) {
-            const splitKey = transformToChartDataKey.split('/')
-            datasetsMobile.push({
-                name: splitKey[0],
-                population: transformToChartData[transformToChartDataKey],
-                color: generateColor(),
-                legendFontColor: 'white'
-            });
-        }
-        return datasetsMobile
-    }
-
-    async getChartDatasetForMobileLine(spendingArray: SpendingModel[]): Promise<ChartDatasetMobileLine[]> {
-        const datasetsMobile: ChartDatasetMobileLine[] = [];
-        const transformToChartData = transformToChartDataHandlerForChartLine(spendingArray)
-        for (const transformToChartDataKey in transformToChartData) {
             const data = [];
+            const dataMonthInYear = []
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             for (const dataKey in transformToChartData[transformToChartDataKey]) {
                 data.push(transformToChartData[transformToChartDataKey][dataKey]);
-            }
-            const splitKey = transformToChartDataKey.split('//')
-            const key = splitKey[0]
-            datasetsMobile.push({key: key, data: data, strokeWidth: 2});
+                dataMonthInYear.push({
+                    monthName: dataKey,
+                    category: transformToChartDataKey,
+                    totalSum: transformToChartData[transformToChartDataKey][dataKey]
+                })
+            } //dataKey === month in category  example // Декабрь
+
+            const currentTotalValue = Object.values(transformToChartData[transformToChartDataKey])[0]
+            datasetsMobile.push({
+                name: transformToChartDataKey,
+                population: currentTotalValue,
+                legendFontColor: 'black',
+                statisticsDataEveryMonthTheYear: dataMonthInYear
+            });
         }
+
         return datasetsMobile
     }
 

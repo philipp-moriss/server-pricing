@@ -32,9 +32,6 @@ export class ChartController {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
         if (queryParams.isMobile) {
-            if (queryParams.typeChart === 'line') {
-                return await this.chartService.getChartDatasetForMobileLine(allHistory)
-            }
             if (queryParams.typeChart === 'pie') {
                 return await this.chartService.getChartDatasetForMobilePie(allHistory)
             }
