@@ -10,6 +10,7 @@ export class ICategory {
     trim: true,
   })
   value: string;
+  color: string
 }
 
 export class ICurrency {
@@ -78,35 +79,43 @@ export class WalletModel extends Document{
     default: [
       {
         _id: new Types.ObjectId(),
-        value: "Food Store"
+        value: "Food Store",
+        color: '#f2a5a5'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Clothing Shop"
+        value: "Clothing Shop",
+        color: '#bd465c'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Communal services"
+        value: "Communal services",
+        color: '#b346bd'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Entertainment"
+        value: "Entertainment",
+        color: '#7346bd'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Auto services"
+        value: "Auto services",
+        color: '#3337a6'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Gifts"
+        value: "Gifts",
+        color: '#3369a6'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Cigarettes and alcohol"
+        value: "Cigarettes and alcohol",
+        color: '#33a6a6'
       },
       {
         _id: new Types.ObjectId(),
-        value: "Other"
+        value: "Other",
+        color: '#33a676'
       }
     ],
   })
