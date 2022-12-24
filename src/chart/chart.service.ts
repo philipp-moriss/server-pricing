@@ -64,24 +64,17 @@ export class ChartService {
         for (const transformToChartDataKey in transformToChartData) { // transformToChartDataKey === category name example // Подарки
 
             const data = [];
-            const dataMonthInYear = []
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             for (const dataKey in transformToChartData[transformToChartDataKey]) {
                 data.push(transformToChartData[transformToChartDataKey][dataKey]);
-                dataMonthInYear.push({
-                    monthName: dataKey,
-                    category: transformToChartDataKey,
-                    totalSum: transformToChartData[transformToChartDataKey][dataKey]
-                })
             } //dataKey === month in category  example // Декабрь
 
             const currentTotalValue = Object.values(transformToChartData[transformToChartDataKey])[0]
             datasetsMobile.push({
                 name: transformToChartDataKey,
                 population: currentTotalValue,
-                legendFontColor: 'black',
-                statisticsDataEveryMonthTheYear: dataMonthInYear
+                legendFontColor: 'black'
             });
         }
 
