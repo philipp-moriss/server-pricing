@@ -5,7 +5,7 @@ export class getChartDataDto {
     year: string;
     isMobile?: boolean
     typeChart?: 'line' | 'pie'
-    month?:string
+    month:string | null
     @Transform(toMongoObjectId)
     walletId: string;
 }

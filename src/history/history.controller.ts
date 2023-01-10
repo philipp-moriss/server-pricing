@@ -63,6 +63,7 @@ export class HistoryController {
             walletId : dto.walletId,
         })
         const updateSpending = await this.spendingService.updateSpending(dto)
+        console.log(updateSpending)
         if (!updateSpending) {
             throw new HttpException('spending not Update', HttpStatus.BAD_REQUEST);
         }
