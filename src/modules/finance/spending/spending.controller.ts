@@ -42,15 +42,32 @@ export class SpendingController {
         return spending
     }
 
-    @Delete()
-    async deleteSpending(@Body() {spendingId, walletId} : SpendingWalletIdDto,@User('_id') userId : string) : Promise<SpendingModel | null> {
-        const dto : SpendingDtoService = {spendingId, walletId, userId}
-        const spending = await this.spendingService.deleteSpending(dto)
+    @Post()
+    async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @User('_id') userId : string) : Promise<SpendingModel | null> {
+        const currentWallet = await this.walletService.getWallet(walletId, userId)
+        if (!currentWallet) {
+            throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
+        }
+
+        const walletCurrency = currentWallet.currency;
+        const walletName = currentWallet.name
+        const spending = await this.spendingService.addSpending({
+            userId,
+            walletId,
+            spending: {...spendingDto, currency : walletCurrency, walletName: walletName}
+        })
         if (!spending) {
-            throw new HttpException('spending not Delete', HttpStatus.BAD_REQUEST);
+            throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
+        }
+
+        const currentBalance = currentWallet.balance - spending.amount
+        const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance})
+        if (!balance) {
+            throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
         }
         return spending
     }
+
 
     @Put()
     async updateSpending(@Body() {spending, walletId} : UpdateSpendingDto,@User('_id') userId : string): Promise<SpendingModel | null>  {
@@ -86,32 +103,14 @@ export class SpendingController {
         return updateSpending
     }
 
-
-    @Post()
-    async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @User('_id') userId : string) : Promise<SpendingModel | null> {
-        const currentWallet = await this.walletService.getWallet(walletId, userId)
-        if (!currentWallet) {
-            throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
-        }
-
-        const walletCurrency = currentWallet.currency;
-        const walletName = currentWallet.name
-        const spending = await this.spendingService.addSpending({
-            userId,
-            walletId,
-            spending: {...spendingDto, currency : walletCurrency, walletName: walletName}
-        })
+    @Delete()
+    async deleteSpending(@Body() {spendingId, walletId} : SpendingWalletIdDto,@User('_id') userId : string) : Promise<SpendingModel | null> {
+        const dto : SpendingDtoService = {spendingId, walletId, userId}
+        const spending = await this.spendingService.deleteSpending(dto)
         if (!spending) {
-            throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
-        }
-
-        const currentBalance = currentWallet.balance - spending.amount
-        const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance})
-        if (!balance) {
-            throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
+            throw new HttpException('spending not Delete', HttpStatus.BAD_REQUEST);
         }
         return spending
     }
-
 
 }
