@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import {MongoExceptionFilter, ValidationExceptionFilter} from "./exeptionsFilters/exeption-filter";
+
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import {MongoExceptionFilter, ValidationExceptionFilter} from "./common/helpers/exceptions/exeption-filter";
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3001;
