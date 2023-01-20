@@ -81,7 +81,7 @@ export class WalletController {
         if (!wallet) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
-        const spending = await this.spendingService.deleteSpendingByWalletId({walletId})
+        const spending = await this.spendingService.deleteSpendingByParams({walletId})
         if (!spending) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }
@@ -94,7 +94,7 @@ export class WalletController {
         if (!deletedCount) {
             throw new HttpException('wallets not delete', HttpStatus.NOT_FOUND);
         }
-        const spending = await this.spendingService.deleteSpendingByUserId({userId})
+        const spending = await this.spendingService.deleteSpendingByParams({userId})
         if (!spending) {
             throw new HttpException('walletId not Found', HttpStatus.NOT_FOUND);
         }

@@ -42,5 +42,5 @@ export class DeleteReplenishmentDto {
 
     @IsNotEmpty()
     @Transform(toMongoObjectId)
-    spendingId : string;
+    replenishmentId : string;
 }

@@ -13,15 +13,6 @@ export class WalletService {
     ) {
     }
 
-    async addWallet(userId: string, wallet: Wallet): Promise<WalletModel | null> {
-        const newWallet = new this.walletModel({...wallet, userId})
-        if (!newWallet) {
-            return null
-        }
-        await newWallet.save()
-        return newWallet
-    }
-
     async getAllWallets(userId: string): Promise<Array<WalletModel> | null> {
         const wallets = await this.walletModel.find({userId: userId})
         return wallets
@@ -38,6 +29,35 @@ export class WalletService {
         return currentWallet;
     }
 
+    async addWallet(userId: string, wallet: Wallet): Promise<WalletModel | null> {
+        const newWallet = new this.walletModel({...wallet, userId})
+        if (!newWallet) {
+            return null
+        }
+        await newWallet.save()
+        return newWallet
+    }
+
+    async updateWallet({
+                           walletId,
+                           wallet
+                       }: updateWalletDto): Promise<WalletModel | null> {
+        return this.walletModel.findByIdAndUpdate({_id: walletId}, wallet, {overwrite: false, new: true});
+    }
+
+    //:TODO fix this shit
+    async updateBalanceWallet({
+                                  walletId,
+                                  balance
+                              }: updateWalletBalanceDto) {
+        const wallet = await this.walletModel.findById({_id: walletId});
+        if (!wallet) {
+            return null
+        }
+        wallet.balance = balance
+        return  wallet.save()
+    }
+
     async deleteWallet(walletId: string, userId: string): Promise<WalletModel | null> {
         const currentWallet = await this.walletModel.findById({_id: walletId});
         if (!currentWallet) {
@@ -51,24 +71,5 @@ export class WalletService {
 
     async deleteWallets(userId: string): Promise<{ deletedCount: number; } | null> {
        return this.walletModel.deleteMany({userId: userId});
-    }
-
-    async updateWallet({
-                           walletId,
-                           wallet
-                       }: updateWalletDto): Promise<WalletModel | null> {
-        return this.walletModel.findByIdAndUpdate({_id: walletId}, wallet, {overwrite: false, new: true});
-    }
-
-    async updateBalanceWallet({
-                                  walletId,
-                                  balance
-                              }: updateWalletBalanceDto) {
-        const wallet = await this.walletModel.findById({_id: walletId});
-        if (!wallet) {
-            return null
-        }
-        wallet.balance = balance
-        return  wallet.save()
     }
 }

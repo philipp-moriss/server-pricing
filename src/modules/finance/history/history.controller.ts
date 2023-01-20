@@ -22,7 +22,7 @@ export class HistoryController {
 
     @Get()
     async getHistoryWalletByWalletId(@Query() {walletId}: WalletId): Promise<SpendingModel[] | null> {
-        const history = await this.spendingService.getSpendingByWalletId({walletId});
+        const history = await this.spendingService.getSpendingByParameters({walletId});
         if (!history) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
@@ -31,7 +31,7 @@ export class HistoryController {
 
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') {userId} : UserId): Promise<SpendingModel[] | null> {
-        const history = await this.spendingService.getSpendingByUserId({userId : userId});
+        const history = await this.spendingService.getSpendingByParameters({userId : userId});
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
@@ -42,7 +42,7 @@ export class HistoryController {
 
     @Delete()
     async deleteHistoryWalletByWalletId(@Body() {walletId}: WalletId): Promise<{ deletedCount: number; } | null> {
-        const deleteCount = await this.spendingService.deleteSpendingByWalletId({walletId});
+        const deleteCount = await this.spendingService.deleteSpendingByParams({walletId});
         if (!deleteCount) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
@@ -51,7 +51,7 @@ export class HistoryController {
 
     @Delete('allUserHistory')
     async deleteHistoryWalletByUserId(@User('_id') userId : string): Promise<{ deletedCount: number; } | null> {
-        const deleteCount = await this.spendingService.deleteSpendingByUserId({userId});
+        const deleteCount = await this.spendingService.deleteSpendingByParams({userId});
         if (!deleteCount) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }

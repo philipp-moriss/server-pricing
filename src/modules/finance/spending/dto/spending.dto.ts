@@ -56,9 +56,6 @@ export class SpendingDtoWithSpendingService {
 }
 
 export class AddSpendingDto {
-    /*    @IsNotEmpty()
-        @Transform(toMongoObjectId)
-        userId : string;*/
 
     @IsNotEmpty()
     @Transform(toMongoObjectId)
