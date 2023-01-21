@@ -1,9 +1,6 @@
 import {Injectable} from '@nestjs/common';
-import {SpendingModel} from "../../../models/spending.model";
-import {transformToChartDataHandlerForChartPie} from "../../../common/utils/utils";
-
-
-
+import {SpendingModel} from "../spending/spending.model";
+import {transformToChartDataHandlerForChartPie} from "../utils/utils";
 
 
 type DatasetData = {
@@ -20,11 +17,6 @@ export type ChartDatasetMobile = {
     population: number,
     color: string,
     legendFontColor: string,
-}
-export type ChartDatasetMobileLine = {
-    data: number[]
-    strokeWidth: 2,
-    key: string
 }
 
 @Injectable()

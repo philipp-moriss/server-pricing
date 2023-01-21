@@ -17,14 +17,13 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-
-        const currentYear = Number(queryParams.year ?? new Date().getFullYear())
-        const currentMonth = Number(queryParams.month ?? new Date().getMonth())
+        const currentYear = Number(queryParams.year ? queryParams.year : new Date().getFullYear())
+        const currentMonth = Number(queryParams.month ? queryParams.month : null)
 
         const paramsForSearchSpending = {
             createdAt: {
-                $gte: new Date(currentYear, currentMonth ? currentMonth : 1, 1),
-                $lt: new Date(currentYear, currentMonth ? currentMonth : 12, 31)
+                $gte: new Date(currentYear, currentMonth ? currentMonth : 0, 1),
+                $lt: new Date(currentYear, currentMonth ? currentMonth : 11, 31)
             },
             userId,
             walletId: queryParams.walletId
@@ -33,11 +32,15 @@ export class ChartController {
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
+
         if (queryParams.isMobile) {
             if (queryParams.typeChart === 'pie') {
                 return {
                     chartData: await this.chartService.getChartDatasetForMobilePie(allHistory),
-                    date: paramsForSearchSpending.createdAt.$lt
+                    date: {
+                        year: paramsForSearchSpending.createdAt.$lt,
+                        month: queryParams.month
+                    }
                 }
             }
         } else {
