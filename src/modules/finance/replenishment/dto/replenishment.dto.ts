@@ -17,6 +17,16 @@ class Replenishment {
     currency: string;
 }
 
+export class GetReplenishmentDto {
+    @IsNotEmpty()
+    @Transform(toMongoObjectId)
+    walletId : string;
+
+    @IsNotEmpty()
+    @Transform(toMongoObjectId)
+    replenishmentId : string;
+}
+
 export class CreateReplenishmentDto {
     @IsNotEmpty()
     @Transform(toMongoObjectId)
@@ -29,6 +39,17 @@ export class CreateReplenishmentDto {
     @IsNotEmpty()
     replenishment: Replenishment;
 }
+
+export class AddReplenishmentDto {
+
+    @IsNotEmpty()
+    @Transform(toMongoObjectId)
+    walletId : string;
+
+    @IsNotEmpty()
+    replenishment: Replenishment;
+}
+
 
 
 export class DeleteReplenishmentDto {

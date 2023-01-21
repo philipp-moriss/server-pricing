@@ -43,6 +43,11 @@ export class UsersService {
     return updateUser;
   }
 
+  async setFirstEnter(userId: string, isFirstEnter) : Promise<UserModel | null> {
+    const updateUser = await this.userModel.findByIdAndUpdate(userId, {isFirstEnter}, {overwrite: false, new: true});
+    return updateUser;
+  }
+
   async getUserById(_id: string): Promise<UserModel | null> {
     const user = await this.userModel.findById(_id);
     return user || null;

@@ -18,6 +18,9 @@ export class UserModel extends Document {
   @Prop({ nullable: true, default: null})
   permission: string;
 
+  @Prop({default: true})
+  isFirstEnter: boolean;
+
   @Prop({ default: true })
   active: boolean;
 
