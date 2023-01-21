@@ -19,7 +19,7 @@ export class ReplenishmentController {
     ) {}
 
     @Get()
-    getReplenishment(@Query() {walletId, replenishmentId}: GetReplenishmentDto) : Promise<ReplenishmentModel[] | null> {
+    getReplenishment(@Query() {walletId, replenishmentId}: GetReplenishmentDto) : Promise<ReplenishmentModel | null> {
         const result = this.replenishmentService.getReplenishmentByWalletId({walletId, replenishmentId})
         return result
     }
@@ -51,8 +51,36 @@ export class ReplenishmentController {
     }
 
     @Put()
-    updateReplenishment() {
-        return 'update'
+    async updateReplenishment(@Body() {replenishment, walletId} : AddReplenishmentDto, @User('_id') userId : string) :  Promise<ReplenishmentModel | null> {
+        const dto = {replenishment, walletId, userId}
+        const currentReplenishment = await this.replenishmentService.getReplenishmentByWalletId({
+            replenishmentId : dto.replenishment._id,
+            walletId : dto.walletId,
+        })
+        const updateReplenishment = await this.replenishmentService.updateReplenishment(dto)
+        if (!updateReplenishment) {
+            throw new HttpException('replenishment not Update', HttpStatus.BAD_REQUEST);
+        }
+        if (currentReplenishment.amount !== updateReplenishment.amount) {
+            let currentBalance = 0;
+            const currentWallet = await this.walletService.getWallet(dto.walletId, dto.userId)
+            if (!currentWallet) {
+                throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
+            }
+            if (currentReplenishment.amount > updateReplenishment.amount){
+                const balance = currentReplenishment.amount - updateReplenishment.amount
+                currentBalance = currentWallet.balance - balance
+            }
+            if (currentReplenishment.amount < updateReplenishment.amount){
+                const balance = updateReplenishment.amount - currentReplenishment.amount
+                currentBalance = currentWallet.balance + balance
+            }
+            const balanceWallet = await this.walletService.updateBalanceWallet({walletId: dto.walletId, balance: currentBalance})
+            if (!balanceWallet) {
+                throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
+            }
+        }
+        return updateReplenishment
     }
 
     @Delete()

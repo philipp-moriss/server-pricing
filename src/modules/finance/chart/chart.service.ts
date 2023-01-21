@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
-import {SpendingModel} from "../spending/spending.model";
-import {transformToChartDataHandlerForChartPie} from "../utils/utils";
+import {SpendingModel} from "../../../models/spending.model";
+import {transformToChartDataHandlerForChartPie} from "../../../common/utils/utils";
+
 
 
 type DatasetData = {

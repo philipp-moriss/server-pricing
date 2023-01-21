@@ -13,8 +13,8 @@ export class ReplenishmentService {
     ) {
     }
 
-    async getReplenishmentByWalletId({walletId, replenishmentId} : GetReplenishmentDto) : Promise<ReplenishmentModel[] | null> {
-        return this.replenishmentModel.find({walletId, _id : replenishmentId})
+    async getReplenishmentByWalletId({walletId, replenishmentId} : GetReplenishmentDto) : Promise<ReplenishmentModel | null> {
+        return this.replenishmentModel.findOne({walletId, _id : replenishmentId})
     }
 
     async updateReplenishment({replenishment, userId, walletId}: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
