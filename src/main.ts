@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import {MongoExceptionFilter, ValidationExceptionFilter} from "./exeptionsFilters/exeption-filter";
+
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import {MongoExceptionFilter, ValidationExceptionFilter} from "./common/helpers/exceptions/exeption-filter";
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3001;
@@ -21,6 +22,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api/docs', app, document)
+
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ValidationExceptionFilter(), new MongoExceptionFilter())
