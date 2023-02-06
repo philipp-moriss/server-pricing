@@ -1,6 +1,6 @@
 import {Transform, Type} from "class-transformer";
 import {Types} from "mongoose";
-import {IsEmail, IsNotEmpty} from "class-validator";
+import {IsNotEmpty} from "class-validator";
 import {toMongoObjectId} from "../../../../common/helpers/handlers/userIdHandler";
 
 
@@ -17,6 +17,10 @@ export class Wallet {
   @IsNotEmpty()
   @Type(() => String)
   currency: string;
+  @Type(() => String)
+  totalSpends: string;
+  @Type(() => String)
+  totalIncome: string;
 }
 
 export class getAllWalletsDto {
@@ -71,6 +75,10 @@ export class updateWalletBalanceDto {
 
   @Type(() => Number)
   balance: number;
+  @Type(() => Number)
+  totalSpends?: number;
+  @Type(() => Number)
+  totalIncome?: number;
 }
 
 

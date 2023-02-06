@@ -1,7 +1,16 @@
-import { BadRequestException, Body, Controller, Headers, HttpCode, HttpException, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Post
+} from "@nestjs/common";
 import { RequestUserDto } from "./dto/request-auth.dto";
 import { AuthService } from "./services/auth.service";
-import { CreateAuthDto } from "./dto/create-auth.dto";
+import {CreateAuthDto, CreateAuthDtoGoogle} from "./dto/create-auth.dto";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthModel } from "./models/auth.model";
 import { JWTService } from "./services/jwt.service";
@@ -23,23 +32,41 @@ export class AuthController {
   async registration(@Body() dto: CreateAuthDto) {
     const newUser = await this.authService.register(dto);
     if (!newUser) {
-      throw new BadRequestException("register");
+      throw new HttpException("Непредвиденная ошибка, попробуйте позже", 401);
     }
     return newUser;
   }
-
-  @ApiOperation({ summary: "User login" })
+  @ApiOperation({ summary: "User login witch google" })
   @ApiResponse({ status: 201, type: UserModel })
   @HttpCode(201)
   @Post("login")
   async login(@Body() dto: RequestUserDto) {
     if (!dto.email || !dto.password) {
-      throw new HttpException("Login data was not provided", 401);
+      throw new HttpException("Данные для входа в систему не были предоставлены", 401);
     }
     const user = await this.authService.login(dto);
     if (!user) {
-      throw new HttpException("Wrong email or password", 401);
+      throw new HttpException("Неправильный адрес электронной почты или пароль", 401);
     }
+    return user;
+  }
+  @ApiOperation({ summary: "New user register" })
+  @ApiResponse({ status: 201, type: AuthModel })
+  @HttpCode(201)
+  @Post("register-google")
+  async registrationGoogle(@Body() {email}: CreateAuthDtoGoogle) {
+    const newUser = await this.authService.registerGoogle({email});
+    if (!newUser) {
+      throw new HttpException("Непредвиденная ошибка, попробуйте позже", 401);
+    }
+    return newUser;
+  }
+  @ApiOperation({ summary: "User login witch google" })
+  @ApiResponse({ status: 201, type: UserModel })
+  @HttpCode(201)
+  @Post("login-google")
+  async loginGoogle(@Body() {email}: {email: string}) {
+    const user = await this.authService.loginGoogle(email);
     return user;
   }
 
@@ -51,7 +78,7 @@ export class AuthController {
     const [, token] = jwt.split(" ", 2);
     const jwtPayload = this.jwtService.checkTokenExpiry(token);
     if (!jwtPayload) {
-      throw new HttpException("Your token is expired", 400);
+      throw new HttpException("Срок действия вашего маркера истек", 400);
     } else {
       await this.authService.logout(jwtPayload._id);
       return 201;

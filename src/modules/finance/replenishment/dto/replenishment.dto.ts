@@ -16,7 +16,6 @@ class Replenishment {
     walletName: string;
     currency: string;
 }
-
 export class GetReplenishmentDto {
     @IsNotEmpty()
     @Transform(toMongoObjectId)

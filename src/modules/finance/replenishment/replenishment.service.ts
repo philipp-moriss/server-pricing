@@ -16,6 +16,9 @@ export class ReplenishmentService {
     async getReplenishmentByWalletId({walletId, replenishmentId} : GetReplenishmentDto) : Promise<ReplenishmentModel | null> {
         return this.replenishmentModel.findOne({walletId, _id : replenishmentId})
     }
+    async getReplenishmentsByWalletId(walletId: string) : Promise<ReplenishmentModel[]> {
+        return this.replenishmentModel.find({walletId})
+    }
 
     async updateReplenishment({replenishment, userId, walletId}: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
         return this.replenishmentModel.findOneAndUpdate(

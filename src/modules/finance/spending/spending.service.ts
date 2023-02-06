@@ -1,8 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {
-    SpendingDtoService,
-    SpendingDtoWithSpendingService,
-} from "./dto/spending.dto";
+import {SpendingDtoService, SpendingDtoWithSpendingService,} from "./dto/spending.dto";
 import {InjectModel} from "@nestjs/mongoose";
 import {SpendingModel} from "../../../models/spending.model";
 import {Model} from "mongoose";
@@ -14,13 +11,14 @@ export class SpendingService {
     constructor(
         @InjectModel(SpendingModel.name) private spendingModel: Model<SpendingModel>
     ) {
+
     }
 
     async getSpending({spendingId, walletId, userId}: SpendingDtoService): Promise<SpendingModel | null> {
         return this.spendingModel.findById({_id: spendingId, walletId, userId})
     }
 
-    async getSpendingByParameters(params) : Promise<SpendingModel[] | null> {
+    async getSpendingByParameters(params): Promise<SpendingModel[] | null> {
         return this.spendingModel.find({
             ...params
         })
@@ -51,7 +49,7 @@ export class SpendingService {
         return this.spendingModel.findOneAndDelete({_id: spendingId, walletId, userId});
     }
 
-    async deleteSpendingByParams(params) : Promise<{deletedCount: number} | null> {
+    async deleteSpendingByParams(params): Promise<{ deletedCount: number } | null> {
         return this.spendingModel.deleteMany({
             ...params
         })

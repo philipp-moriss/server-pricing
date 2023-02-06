@@ -11,3 +11,7 @@ export class CreateAuthDto {
   @ApiProperty({ example: "Sparrow", description: "User last name", required: false })
   readonly lastName: string;
 }
+export class CreateAuthDtoGoogle {
+  @ApiProperty(mailExample)
+  readonly email: string;
+}

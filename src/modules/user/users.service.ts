@@ -1,11 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+import {Injectable} from "@nestjs/common";
+import {InjectModel} from "@nestjs/mongoose";
+import {Model} from "mongoose";
 import * as bcrypt from "bcrypt";
 import {UserModel, UserModelType} from "../../models/user.model";
-import {CreateAuthDto} from "../../authentication/dto/create-auth.dto";
+import {CreateAuthDto, CreateAuthDtoGoogle} from "../../authentication/dto/create-auth.dto";
 import {UserPassService} from "../../authentication/services/user-pass.service";
-
 
 
 @Injectable()
@@ -22,30 +21,31 @@ export class UsersService {
     await this.userPassService.create({ _id: newUser._id, passwordHash });
     return newUser.save();
   }
+  async createUserGoogle({ email }: CreateAuthDtoGoogle): Promise<UserModel> {
+    const passwordHash = await this.hashPassword(email);
+    const newUser = new this.userModel({ email });
+    await this.userPassService.create({ _id: newUser?._id, passwordHash });
+    return newUser.save();
+  }
 
   async hashPassword(password): Promise<string> {
-    const hashPassword = await bcrypt.hash(password, 2);
-    return hashPassword;
+    return await bcrypt.hash(password, 2);
   }
 
   async getUser(email: string): Promise<UserModel | null> {
-    const user = await this.userModel.findOne({ email });
-    return user;
+    return await this.userModel.findOne({email});
   }
 
   async getPassModelById(_id) {
-    const passModel = await this.userPassService.get(_id);
-    return passModel;
+    return await this.userPassService.get(_id);
   }
 
   async updateUserById(_id: string, newUserData: UserModel): Promise<UserModel | null> {
-    const updateUser = await this.userModel.findByIdAndUpdate(_id, newUserData, { overwrite: true });
-    return updateUser;
+    return await this.userModel.findByIdAndUpdate(_id, newUserData, {overwrite: true});
   }
 
   async setFirstEnter(userId: string, isFirstEnter) : Promise<UserModel | null> {
-    const updateUser = await this.userModel.findByIdAndUpdate(userId, {isFirstEnter}, {overwrite: false, new: true});
-    return updateUser;
+    return await this.userModel.findByIdAndUpdate(userId, {isFirstEnter}, {overwrite: false, new: true});
   }
 
   async getUserById(_id: string): Promise<UserModel | null> {

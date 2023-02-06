@@ -48,13 +48,21 @@ export class WalletService {
     //:TODO fix this shit
     async updateBalanceWallet({
                                   walletId,
-                                  balance
+                                  balance,
+                                  totalSpends,
+                                  totalIncome
                               }: updateWalletBalanceDto) {
         const wallet = await this.walletModel.findById({_id: walletId});
         if (!wallet) {
             return null
         }
         wallet.balance = balance
+        if(totalSpends) {
+            wallet.totalSpends = totalSpends
+        }
+        if(totalIncome) {
+            wallet.totalIncome = totalIncome
+        }
         return  wallet.save()
     }
 
