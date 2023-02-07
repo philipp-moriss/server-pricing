@@ -28,7 +28,17 @@ export class HistoryController {
         }
         return history
     }
-
+    @Get("last-five-spending")
+    async getLastFiveSpendingHistory(@Query() {
+        walletId
+    }: any, @User('_id') userId: string): Promise<SpendingModel[] | null> {
+        const dto = {walletId, userId}
+        const spending = await this.spendingService.getSpendingByParameters(dto)
+        if (!spending) {
+            throw new HttpException('Трат не найдено', HttpStatus.BAD_REQUEST);
+        }
+        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1 ).slice(1, 5)
+    }
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') {userId} : UserId): Promise<SpendingModel[] | null> {
         const history = await this.spendingService.getSpendingByParameters({userId : userId});
