@@ -37,7 +37,7 @@ export class HistoryController {
         if (!spending) {
             throw new HttpException('Трат не найдено', HttpStatus.BAD_REQUEST);
         }
-        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1 ).slice(1, 5)
+        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1 ).slice(0, 5)
     }
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') {userId} : UserId): Promise<SpendingModel[] | null> {
