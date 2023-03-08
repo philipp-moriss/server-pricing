@@ -60,7 +60,7 @@ export class SpendingController {
             throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
         }
 
-        const currentBalance = currentWallet.balance - spending.amount
+        const currentBalance = Number(currentWallet.balance) - Number(spending.amount)
         const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance})
         if (!balance) {
             throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
@@ -81,19 +81,19 @@ export class SpendingController {
         if (!updateSpending) {
             throw new HttpException('spending not Update', HttpStatus.BAD_REQUEST);
         }
-        if (currentSpending.amount !== updateSpending.amount) {
+        if (Number(currentSpending.amount) !== Number(updateSpending.amount)) {
             let currentBalance = 0;
             const currentWallet = await this.walletService.getWallet(dto.walletId, dto.userId)
             if (!currentWallet) {
                 throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
             }
-            if (currentSpending.amount > updateSpending.amount){
-                const balance = currentSpending.amount - updateSpending.amount
-                currentBalance = currentWallet.balance + balance
+            if (Number(currentSpending.amount) > Number(updateSpending.amount)){
+                const balance = Number(currentSpending.amount) - Number(updateSpending.amount)
+                currentBalance = Number(currentWallet.balance) + Number(balance)
             }
-            if (currentSpending.amount < updateSpending.amount){
-                const balance = updateSpending.amount - currentSpending.amount
-                currentBalance = currentWallet.balance - balance
+            if (Number(currentSpending.amount) < Number(updateSpending.amount)){
+                const balance = Number(updateSpending.amount) - Number(currentSpending.amount)
+                currentBalance = Number(currentWallet.balance) - Number(balance)
             }
             const balanceWallet = await this.walletService.updateBalanceWallet({walletId: dto.walletId, balance: currentBalance})
             if (!balanceWallet) {
