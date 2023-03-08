@@ -75,7 +75,7 @@ export class WalletController {
         return updateWallet
     }
 
-    @Delete('wallet')
+    @Delete()
     async deleteWallet(@Body() {walletId}: deleteWalletDto, @User('_id') userId: string): Promise<WalletModel> {
         const wallet = await this.walletService.deleteWallet(walletId, userId);
         if (!wallet) {

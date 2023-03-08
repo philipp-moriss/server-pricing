@@ -42,7 +42,7 @@ export class ReplenishmentController {
             throw new HttpException('replenishment not Create', HttpStatus.BAD_REQUEST);
         }
 
-        const currentBalance = currentWallet.balance + currentReplenishment.amount
+        const currentBalance = Number(currentWallet.balance) + Number(currentReplenishment.amount)
         const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance})
         if (!balance) {
             throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
@@ -68,12 +68,12 @@ export class ReplenishmentController {
                 throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
             }
             if (currentReplenishment.amount > updateReplenishment.amount){
-                const balance = currentReplenishment.amount - updateReplenishment.amount
-                currentBalance = currentWallet.balance - balance
+                const balance = Number(currentReplenishment.amount) - Number(updateReplenishment.amount)
+                currentBalance = Number(currentWallet.balance) - Number(balance)
             }
             if (currentReplenishment.amount < updateReplenishment.amount){
-                const balance = updateReplenishment.amount - currentReplenishment.amount
-                currentBalance = currentWallet.balance + balance
+                const balance = Number(updateReplenishment.amount) - Number(currentReplenishment.amount)
+                currentBalance = Number(currentWallet.balance) + Number(balance)
             }
             const balanceWallet = await this.walletService.updateBalanceWallet({walletId: dto.walletId, balance: currentBalance})
             if (!balanceWallet) {
