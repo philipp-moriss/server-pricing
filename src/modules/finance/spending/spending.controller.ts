@@ -17,6 +17,7 @@ import {User} from "../../../common/decarators/user.decarator";
 import {UpdateSpendingDto} from "../history/dto/history.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import {WalletService} from "../wallet/wallet.service";
+import moment, * as moments from 'moment';
 
 
 @Controller('spending')
@@ -51,14 +52,18 @@ export class SpendingController {
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
-
         const walletCurrency = currentWallet.currency;
         const walletName = currentWallet.name
-
         const spending = await this.spendingService.addSpending({
             userId,
             walletId,
-            spending: {...spendingDto, currency: walletCurrency, walletName: walletName}
+            spending: {
+                ...spendingDto,
+                date: spendingDto.date,
+                currency: walletCurrency,
+                walletName: walletName,
+                title: 'spend'
+            }
         })
         if (!spending) {
             throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);

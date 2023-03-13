@@ -1,8 +1,9 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {SpendingDtoService, SpendingDtoWithSpendingService,} from "./dto/spending.dto";
 import {InjectModel} from "@nestjs/mongoose";
 import {SpendingModel} from "../../../models/spending.model";
 import {Model} from "mongoose";
+import {checkIsInvalidDate} from "../../../common/utils/utils";
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class SpendingService {
     async getSpendingByParameters(params): Promise<SpendingModel[] | null> {
         return this.spendingModel.find({
             ...params
-        })
+        }).sort('date')
     }
 
     async addSpending({walletId, userId, spending}: SpendingDtoWithSpendingService): Promise<SpendingModel | null> {

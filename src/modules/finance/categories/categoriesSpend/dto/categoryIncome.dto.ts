@@ -13,6 +13,5 @@ export class CategorySpendDtoService {
     @Transform(toMongoObjectId)
     userId : string;
 
-    @IsNotEmpty()
     category: ICategory;
 }

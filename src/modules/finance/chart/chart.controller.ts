@@ -4,6 +4,9 @@ import {ChartService} from "./chart.service";
 import {getChartDataDto} from "./dto/chart.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import {User} from "../../../common/decarators/user.decarator";
+import {ReplenishmentService} from "../replenishment/replenishment.service";
+import * as moments from 'moment';
+import {WalletService} from "../wallet/wallet.service";
 
 
 @Controller('chart')
@@ -11,36 +14,54 @@ import {User} from "../../../common/decarators/user.decarator";
 export class ChartController {
     constructor(
         private spendingService: SpendingService,
+        private walletService: WalletService,
+        private replenishmentService: ReplenishmentService,
         private chartService: ChartService,
     ) {
     }
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-        const currentYear = Number(queryParams.year ? queryParams.year : new Date().getFullYear())
-        const currentMonth = Number(queryParams.month ? queryParams.month : null)
+        const dateStart = queryParams?.dateStart ? new Date(+queryParams?.dateStart).setUTCHours(0,0,0,0) : null
+        const dateEnd = queryParams?.dateEnd ? new Date(+queryParams?.dateEnd).setUTCHours(23,59,0,0): null
 
-        const paramsForSearchSpending = {
-            createdAt: {
-                $gte: new Date(currentYear, currentMonth ? currentMonth : 0, 1),
-                $lt: new Date(currentYear, currentMonth ? currentMonth : 11, 31)
+        const paramsForSearchOperations = {
+            date: {
+                $gte: dateStart,
+                $lt: dateEnd
             },
             userId,
             walletId: queryParams.walletId
         }
-        const allHistory = await this.spendingService.getSpendingByParameters(paramsForSearchSpending);
+        if (!paramsForSearchOperations.date?.$gte) {
+            delete paramsForSearchOperations.date.$gte
+        }
+        if (!paramsForSearchOperations.date?.$lt) {
+            delete paramsForSearchOperations.date.$lt
+        }
+        if ((!paramsForSearchOperations.date?.$gte && !paramsForSearchOperations.date?.$lt)) {
+            delete paramsForSearchOperations.date
+        }
+        const currentWallet = await this.walletService.getWallet(queryParams.walletId, userId)
+        const allHistory = queryParams?.showChart === 'income'
+            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperations)
+            : await this.spendingService.getSpendingByParameters(paramsForSearchOperations);
+
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
-
+        const totalSumOperations = allHistory.reduce((acc, curr) => Math.round(acc + Number(curr?.amount)), 0)
         if (queryParams.isMobile) {
             if (queryParams.typeChart === 'pie') {
                 return {
                     chartData: await this.chartService.getChartDatasetForMobilePie(allHistory),
                     date: {
-                        year: paramsForSearchSpending.createdAt.$lt,
-                        month: queryParams.month
-                    }
+                        dateStart: dateStart ? dateStart : null,
+                        dateEnd: dateEnd ? dateEnd : null
+                    },
+                    showChart: queryParams?.showChart,
+                    currentWallet: currentWallet,
+                    totalSumOperations: totalSumOperations
                 }
             }
         } else {

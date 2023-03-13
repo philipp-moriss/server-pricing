@@ -1,6 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import {Document, Types} from "mongoose";
-import {ICategory, ICurrency} from "./wallet.model";
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import {Document} from "mongoose";
 
 export type UserModelType = UserModel & Document;
 
@@ -32,27 +31,6 @@ export class UserModel extends Document {
     trim: true,
   })
   email: string;
-
-
-  @Prop({
-    type: () => [ICategory],
-    nullable: true,
-    default: [
-      {
-        _id: new Types.ObjectId(),
-        value: "USD"
-      },
-      {
-        _id: new Types.ObjectId(),
-        value: "EUR"
-      },
-      {
-        _id: new Types.ObjectId(),
-        value: "BY"
-      },
-    ],
-  })
-  castCurrency: Array<ICurrency>
 }
 
 export const UserModelSchema = SchemaFactory.createForClass(UserModel);

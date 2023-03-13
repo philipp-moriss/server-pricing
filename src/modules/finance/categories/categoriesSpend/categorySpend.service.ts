@@ -2,10 +2,9 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 import {CategoryIncomeModel} from "../../../../models/categoryIncome.model";
-import {ICategory} from "../../../../models/wallet.model";
 import {CategorySpendDtoService} from "./dto/categoryIncome.dto";
 import {CategorySpendModel} from "../../../../models/categorySpend.model";
-
+import {ICategory} from "../../../../models/wallet.model";
 
 @Injectable()
 export class CategorySpendService {
@@ -15,11 +14,11 @@ export class CategorySpendService {
     ) {
     }
 
-    async findCategoryIncome(nameCategory: string): Promise<ICategory | null> {
-        return this.categorySpendModel.findOne({value: nameCategory});
+    async findCategorySpends(nameCategory: string, userId: string): Promise<ICategory | null> {
+        return this.categorySpendModel.findOne({value: nameCategory, userId, operation: 'spend'});
     }
 
-    async addCategory({userId, category}: CategorySpendDtoService): Promise<ICategory | null> {
+    async addCategory({userId, category}: CategorySpendDtoService): Promise<CategorySpendModel | null> {
         return await this.categorySpendModel.create({...category, userId})
     }
 

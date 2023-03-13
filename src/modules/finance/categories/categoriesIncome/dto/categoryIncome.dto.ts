@@ -5,14 +5,12 @@ import {toMongoObjectId} from "../../../../../common/helpers/handlers/userIdHand
 
 
 export class AddCategoryIncomeDto {
-    @IsNotEmpty()
     categoryIncome: ICategory;
 }
 export class CategoryIncomeDtoService {
     @IsNotEmpty()
     @Transform(toMongoObjectId)
     userId : string;
-
     @IsNotEmpty()
     category: ICategory;
 }

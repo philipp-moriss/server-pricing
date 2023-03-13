@@ -28,28 +28,28 @@ export class UsersService {
     return newUser.save();
   }
 
-  async hashPassword(password): Promise<string> {
-    return await bcrypt.hash(password, 2);
-  }
+    async hashPassword(password): Promise<string> {
+        return await bcrypt.hash(password, 2);
+    }
 
-  async getUser(email: string): Promise<UserModel | null> {
-    return await this.userModel.findOne({email});
-  }
+    async getUser(email: string): Promise<UserModel | null> {
+        return await this.userModel.findOne({email});
+    }
 
-  async getPassModelById(_id) {
-    return await this.userPassService.get(_id);
-  }
+    async getPassModelById(_id: string) {
+        return await this.userPassService.get(_id);
+    }
 
-  async updateUserById(_id: string, newUserData: UserModel): Promise<UserModel | null> {
-    return await this.userModel.findByIdAndUpdate(_id, newUserData, {overwrite: true});
-  }
+    async updateUserById(_id: string, newUserData: UserModel): Promise<UserModel | null> {
+        return await this.userModel.findByIdAndUpdate(_id, newUserData, {overwrite: true});
+    }
 
-  async setFirstEnter(userId: string, isFirstEnter) : Promise<UserModel | null> {
-    return await this.userModel.findByIdAndUpdate(userId, {isFirstEnter}, {overwrite: false, new: true});
-  }
+    async setFirstEnter(userId: string, isFirstEnter): Promise<UserModel | null> {
+        return await this.userModel.findByIdAndUpdate(userId, {isFirstEnter}, {overwrite: false, new: true});
+    }
 
-  async getUserById(_id: string): Promise<UserModel | null> {
-    const user = await this.userModel.findById(_id);
-    return user || null;
-  }
+    async getUserById(_id: string): Promise<UserModel | null> {
+        const user = await this.userModel.findById(_id);
+        return user || null;
+    }
 }

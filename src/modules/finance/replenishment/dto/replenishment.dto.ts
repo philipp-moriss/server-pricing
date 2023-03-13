@@ -1,6 +1,7 @@
 import {IsNotEmpty} from "class-validator";
 import {Transform} from "class-transformer";
 import {toMongoObjectId} from "../../../../common/helpers/handlers/userIdHandler";
+import {Prop} from "@nestjs/mongoose";
 
 
 class Replenishment {
@@ -15,6 +16,10 @@ class Replenishment {
     amount: number;
     walletName: string;
     currency: string;
+    @Prop({
+        nullable: false,
+    })
+    date: number
 }
 export class GetReplenishmentDto {
     @IsNotEmpty()
@@ -46,7 +51,16 @@ export class AddReplenishmentDto {
     walletId : string;
 
     @IsNotEmpty()
-    replenishment: Replenishment;
+    replenishment: {
+        _id?: string;
+        title: string;
+        description: string;
+        category: string;
+        amount: number;
+        walletName: string;
+        currency: string;
+        date: number
+    };
 }
 
 

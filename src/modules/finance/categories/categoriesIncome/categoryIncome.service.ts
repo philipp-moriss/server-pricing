@@ -5,6 +5,7 @@ import {CategoryIncomeModel} from "../../../../models/categoryIncome.model";
 import {CategoryIncomeDtoService} from "./dto/categoryIncome.dto";
 import {ICategory} from "../../../../models/wallet.model";
 import {SpendingModel} from "../../../../models/spending.model";
+import {v1} from "uuid";
 
 
 @Injectable()
@@ -14,10 +15,10 @@ export class CategoryIncomeService {
         @InjectModel(CategoryIncomeModel.name) private categoryModel: Model<CategoryIncomeModel>
     ) {
     }
-    async findCategoryIncome(nameCategory: string): Promise<ICategory | null> {
-        return this.categoryModel.findOne({value: nameCategory});
+    async findCategoryIncome(nameCategory: string, userId: string): Promise<ICategory | null> {
+        return this.categoryModel.findOne({value: nameCategory, userId, operation: 'income'});
     }
-    async addCategory({userId, category}: CategoryIncomeDtoService): Promise<ICategory | null> {
+    async addCategory({userId, category}: CategoryIncomeDtoService): Promise<CategoryIncomeModel | null> {
         return await this.categoryModel.create({...category, userId})
     }
 

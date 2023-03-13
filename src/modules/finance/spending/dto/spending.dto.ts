@@ -1,6 +1,7 @@
 import {IsNotEmpty} from "class-validator";
 import {Transform} from "class-transformer";
 import {toMongoObjectId} from "../../../../common/helpers/handlers/userIdHandler";
+import {Prop} from "@nestjs/mongoose";
 
 
 export class SpendingWalletIdDto {
@@ -25,6 +26,11 @@ export class Spending {
     amount: number;
     walletName: string;
     currency: string;
+    @Prop({
+        type: () => Date,
+        nullable: false,
+    })
+    date: number
 }
 
 export class SpendingDtoService {
@@ -61,5 +67,14 @@ export class AddSpendingDto {
     @Transform(toMongoObjectId)
     walletId : string;
 
-    spending : Spending;
+    spending : {
+        _id : string;
+        title: string;
+        description: string;
+        category: string;
+        amount: number;
+        walletName: string;
+        currency: string;
+        date: number
+    };
 }
