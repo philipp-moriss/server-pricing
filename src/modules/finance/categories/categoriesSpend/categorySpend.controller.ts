@@ -19,12 +19,12 @@ export class CategorySpendController {
 
     @Post()
     async addCategorySpend(@Body() {categorySpend}: AddCategorySpendDto, @User('_id') userId: string): Promise<ICategory | null> {
-        const checkCategory = await this.categorySpendService.findCategoryIncome(categorySpend.value)
+        const checkCategory = await this.categorySpendService.findCategorySpends(categorySpend.value, userId)
+        console.log(checkCategory)
         if (checkCategory) {
             throw new HttpException('Категория уже существует', HttpStatus.BAD_REQUEST);
         }
         const category = await this.categorySpendService.addCategory({category: categorySpend, userId: userId})
-
         if (!category) {
             throw new HttpException('Ошибка, попробуйте позже', HttpStatus.BAD_REQUEST);
         }
@@ -33,7 +33,7 @@ export class CategorySpendController {
 
     @Get()
     async getCategoriesISpend(@User('_id') userId: string): Promise<CategorySpendModel[] | null> {
-        const category = await this.categorySpendService.getCategories(userId)
+        const category = await this.categorySpendService.getCategories({userId, operation: 'spend'})
         if (!category) {
             throw new HttpException('Ошибка, попробуйте позже', HttpStatus.BAD_REQUEST);
         }

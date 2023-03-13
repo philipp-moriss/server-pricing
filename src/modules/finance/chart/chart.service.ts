@@ -69,7 +69,7 @@ export class ChartService {
             const currentTotalValue = Object.values(transformToChartData[transformToChartDataKey])[0]
             datasetsMobile.push({
                 name: transformToChartDataKey,
-                population: currentTotalValue,
+                population: Math.round(Number(currentTotalValue)),
                 legendFontColor: 'black'
             });
         }

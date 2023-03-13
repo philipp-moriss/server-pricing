@@ -13,14 +13,29 @@ export class ReplenishmentService {
     ) {
     }
 
-    async getReplenishmentByWalletId({walletId, replenishmentId} : GetReplenishmentDto) : Promise<ReplenishmentModel | null> {
-        return this.replenishmentModel.findOne({walletId, _id : replenishmentId})
+    async getReplenishmentByWalletId({
+                                         walletId,
+                                         replenishmentId
+                                     }: GetReplenishmentDto): Promise<ReplenishmentModel | null> {
+        return this.replenishmentModel.findOne({walletId, _id: replenishmentId})
     }
-    async getReplenishmentsByWalletId(walletId: string) : Promise<ReplenishmentModel[]> {
+
+    async getReplenishmentsByWalletId(walletId: string): Promise<ReplenishmentModel[]> {
         return this.replenishmentModel.find({walletId})
     }
 
-    async updateReplenishment({replenishment, userId, walletId}: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
+    async getReplenishmentsByParameters(params): Promise<ReplenishmentModel[] | null> {
+        return this.replenishmentModel.find({
+            ...params
+        }).sort('date')
+
+    }
+
+    async updateReplenishment({
+                                  replenishment,
+                                  userId,
+                                  walletId
+                              }: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
         return this.replenishmentModel.findOneAndUpdate(
             {
                 _id: replenishment._id,
@@ -37,11 +52,19 @@ export class ReplenishmentService {
         );
     }
 
-    async addReplenishment({walletId, userId, replenishment}: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
+    async addReplenishment({
+                               walletId,
+                               userId,
+                               replenishment
+                           }: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
         return await this.replenishmentModel.create({...replenishment, userId, walletId})
     }
 
-    async deleteReplenishment({walletId, userId, replenishmentId}: DeleteReplenishmentDto): Promise<ReplenishmentModel | null> {
+    async deleteReplenishment({
+                                  walletId,
+                                  userId,
+                                  replenishmentId
+                              }: DeleteReplenishmentDto): Promise<ReplenishmentModel | null> {
         return this.replenishmentModel.findOneAndDelete({_id: replenishmentId, walletId, userId});
     }
 }

@@ -8,6 +8,16 @@ export class SpendingByUserIdDto {
     @Transform(toMongoObjectId)
     userId : string;
 }
+export class getHistoryByParamsDto {
+    dateStart?: number;
+    dateEnd?: number;
+    selectedCategory: string
+    showHistory: 'income' | 'spend';
+    sortBy: 'date' | 'sum' | 'categoryName'
+    sortDecreasing: 'decreasing' | 'increasing'
+    @Transform(toMongoObjectId)
+    walletId: string;
+}
 
 export class UpdateSpendingDto {
     @IsNotEmpty()

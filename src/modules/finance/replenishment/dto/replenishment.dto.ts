@@ -17,10 +17,9 @@ class Replenishment {
     walletName: string;
     currency: string;
     @Prop({
-        type: () => Date,
         nullable: false,
     })
-    date: Date
+    date: number
 }
 export class GetReplenishmentDto {
     @IsNotEmpty()
@@ -52,7 +51,16 @@ export class AddReplenishmentDto {
     walletId : string;
 
     @IsNotEmpty()
-    replenishment: Replenishment;
+    replenishment: {
+        _id?: string;
+        title: string;
+        description: string;
+        category: string;
+        amount: number;
+        walletName: string;
+        currency: string;
+        date: number
+    };
 }
 
 

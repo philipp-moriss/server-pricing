@@ -7,7 +7,7 @@ import {WalletService} from "../wallet/wallet.service";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import {ICategory} from "../../../models/wallet.model";
 import {UserPassService} from "../../../authentication/services/user-pass.service";
-
+import moment, * as moments from 'moment';
 
 @Controller('replenishment')
 @UseGuards(AuthGuard)
@@ -20,7 +20,7 @@ export class ReplenishmentController {
     }
 
     @Get()
-    getReplenishments(@Query() {walletId}: GetReplenishmentDto): Promise<ReplenishmentModel[] | null> {
+    getReplenishments(@Query() {walletId}: { walletId: string }): Promise<ReplenishmentModel[] | null> {
         const result = this.replenishmentService.getReplenishmentsByWalletId(walletId)
         if (!result) {
             throw new HttpException('replenishment is empty', HttpStatus.BAD_REQUEST);
@@ -43,14 +43,24 @@ export class ReplenishmentController {
         const currentReplenishment = await this.replenishmentService.addReplenishment({
             userId,
             walletId,
-            replenishment: {...replenishment, currency: walletCurrency, walletName: walletName}
+            replenishment: {
+                ...replenishment,
+                date: replenishment.date,
+                currency: walletCurrency,
+                walletName: walletName,
+                title: 'income'
+            }
         })
         if (!currentReplenishment) {
             throw new HttpException('replenishment not Create', HttpStatus.BAD_REQUEST);
         }
         const totalIncome = Math.round(Number(currentWallet?.totalIncome ?? 0) + Number(replenishment.amount))
         const currentBalance = Math.round(Number(currentWallet?.balance ?? 0) + Number(replenishment.amount))
-        const balance = await this.walletService.updateBalanceWallet({walletId, balance: currentBalance, totalIncome: totalIncome})
+        const balance = await this.walletService.updateBalanceWallet({
+            walletId,
+            balance: currentBalance,
+            totalIncome: totalIncome
+        })
         if (!balance) {
             throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
         }
@@ -67,7 +77,11 @@ export class ReplenishmentController {
             replenishmentId: dto.replenishment._id,
             walletId: dto.walletId,
         })
-        const updateReplenishment = await this.replenishmentService.updateReplenishment(dto)
+        const updateReplenishment = await this.replenishmentService.updateReplenishment({
+            ...dto, replenishment: {
+                ...dto.replenishment, date: replenishment.date
+            }
+        })
         if (!updateReplenishment) {
             throw new HttpException('replenishment not Update', HttpStatus.BAD_REQUEST);
         }
